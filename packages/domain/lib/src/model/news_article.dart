@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 class NewsArticle {
   /// Creates a new [NewsArticle].
   const NewsArticle({
-    required this.id,
     required this.title,
     this.author,
     this.description,
@@ -14,9 +13,6 @@ class NewsArticle {
     this.publishedAt,
     this.content,
   });
-
-  /// The unique text identifier of the article.
-  final String id;
 
   /// The title of the article.
   final String? title;
@@ -41,17 +37,9 @@ class NewsArticle {
 
   /// Creates a new [NewsArticle] from a JSON object.
   factory NewsArticle.fromJson(Map<String, dynamic> json) {
-    // Parse out the source map, which holds 'name' and possibly 'id'.
-    final sourceMap = json['source'] as Map<String, dynamic>? ?? {};
-    final sourceName = sourceMap['name'] as String? ?? '';
-    final author = json[NewsArticleField.author] as String? ?? '';
-
-    final generatedId = getArticleId(sourceName, author);
-
     return NewsArticle(
-      id: generatedId,
       title: json[NewsArticleField.title] as String? ?? '',
-      author: author,
+      author: json[NewsArticleField.author] as String?,
       description: json[NewsArticleField.description] as String?,
       url: json[NewsArticleField.url] as String?,
       urlToImage: json[NewsArticleField.urlToImage] as String?,
@@ -68,7 +56,6 @@ class NewsArticle {
 
     return other is NewsArticle &&
         other.runtimeType == runtimeType &&
-        other.id == id &&
         other.title == title &&
         other.author == author &&
         other.description == description &&
@@ -81,7 +68,6 @@ class NewsArticle {
   @override
   int get hashCode {
     return runtimeType.hashCode ^
-        id.hashCode ^
         title.hashCode ^
         author.hashCode ^
         description.hashCode ^
@@ -94,7 +80,6 @@ class NewsArticle {
   /// Converts an [NewsArticle] to a JSON object.
   Map<String, dynamic> toJson() {
     return {
-      NewsArticleField.id: id,
       NewsArticleField.title: title,
       NewsArticleField.author: author,
       NewsArticleField.description: description,
@@ -104,21 +89,6 @@ class NewsArticle {
       NewsArticleField.content: content,
     };
   }
-
-  /// Returns the unique ID from [sourceName] + [author]
-  static String getArticleId(String sourceName, String author) {
-    final trimmedSource = sourceName.trim();
-    final trimmedAuthor = author.trim();
-
-    final sourceNamePrefix =
-        trimmedSource.isEmpty ? 'unknown-source' : trimmedSource;
-    final authorSuffix =
-        trimmedAuthor.isEmpty ? 'unknown-author' : trimmedAuthor;
-
-    // Replace spaces with "-" and convert to lowercase to follow ID conventions.
-    return '${sourceNamePrefix.replaceSpacesWithDash()}-${authorSuffix.replaceSpacesWithDash()}'
-        .toLowerCase();
-  }
 }
 
 /// Contains the field names of the [NewsArticleField] table.
@@ -126,7 +96,6 @@ class NewsArticle {
 abstract class NewsArticleField {
   const NewsArticleField._();
 
-  static const id = 'id';
   static const author = 'author';
   static const title = 'title';
   static const description = 'description';
@@ -134,11 +103,4 @@ abstract class NewsArticleField {
   static const urlToImage = 'url_to_image';
   static const publishedAt = 'published_at';
   static const content = 'content';
-}
-
-extension on String {
-  /// Updates the input [text] by replacing all spaces with a dash.
-  String replaceSpacesWithDash() {
-    return replaceAll(' ', '-');
-  }
 }

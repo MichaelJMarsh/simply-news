@@ -1,18 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+
+import 'news_article.dart';
 
 /// A class that represents a favorite news article.
 @immutable
 class FavoriteNewsArticle {
   /// Creates a new [FavoriteNewsArticle].
   const FavoriteNewsArticle({
-    required this.articleId,
+    required this.article,
     required this.insertionTime,
   });
 
   /// Creates a new [FavoriteNewsArticle] from a Sqflite map.
   factory FavoriteNewsArticle.fromSqfliteMap(Map<String, dynamic> map) {
     return FavoriteNewsArticle(
-      articleId: map[FavoriteNewsArticleField.articleId] as String,
+      article: NewsArticle.fromJson(
+        jsonDecode(map[FavoriteNewsArticleField.article])
+            as Map<String, dynamic>,
+      ),
       insertionTime: DateTime.fromMillisecondsSinceEpoch(
         map[FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch]
             as int,
@@ -21,7 +28,7 @@ class FavoriteNewsArticle {
   }
 
   /// The ID of the corresponding [FavoriteNewsArticle].
-  final String articleId;
+  final NewsArticle article;
 
   /// The time when the news article was added to the favorites.
   final DateTime insertionTime;
@@ -32,19 +39,19 @@ class FavoriteNewsArticle {
 
     return other is FavoriteNewsArticle &&
         other.runtimeType == runtimeType &&
-        other.articleId == articleId &&
+        other.article == article &&
         other.insertionTime == insertionTime;
   }
 
   @override
   int get hashCode {
-    return runtimeType.hashCode ^ articleId.hashCode ^ insertionTime.hashCode;
+    return runtimeType.hashCode ^ article.hashCode ^ insertionTime.hashCode;
   }
 
   /// Converts a [FavoriteNewsArticle] to a Sqflite map.
   Map<String, dynamic> toSqfliteMap() {
     return {
-      FavoriteNewsArticleField.articleId: articleId,
+      FavoriteNewsArticleField.article: jsonEncode(article.toJson()),
       FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch:
           insertionTime.millisecondsSinceEpoch,
     };
@@ -56,7 +63,7 @@ class FavoriteNewsArticle {
 abstract class FavoriteNewsArticleField {
   const FavoriteNewsArticleField._();
 
-  static const articleId = 'article_id';
+  static const article = 'article';
   static const insertionDateInMillisecondsSinceEpoch =
       'insertion_date_in_milliseconds_since_epoch';
 }

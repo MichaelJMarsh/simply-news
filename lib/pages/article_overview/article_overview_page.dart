@@ -88,31 +88,46 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: AnimatedTranslation.vertical(
-          animation: _enterAnimations.appBarTitle,
-          pixels: 32,
-          child: const Text('Article Overview'),
-        ),
-        leading: AnimatedTranslation.horizontal(
-          animation: _enterAnimations.appBarTitle,
-          pixels: -24,
-          child: IconButton(
-            onPressed: Navigator.of(context).pop,
-            icon: const Icon(Icons.arrow_back),
+    return ChangeNotifierProvider(
+      create: (context) => ArticleOverviewPageScope.of(
+        context,
+        article: widget.article,
+      )..initialize(),
+      builder: (context, _) {
+        final article = context.watch<ArticleOverviewPageScope>();
+        return Scaffold(
+          appBar: AppBar(
+            title: AnimatedTranslation.vertical(
+              animation: _enterAnimations.appBarTitle,
+              pixels: 32,
+              child: const Text('Article Overview'),
+            ),
+            leading: AnimatedTranslation.horizontal(
+              animation: _enterAnimations.appBarButton,
+              pixels: -24,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: IconButton(
+                  onPressed: Navigator.of(context).pop,
+                  icon: const Icon(Icons.arrow_back),
+                ),
+              ),
+            ),
+            actions: [
+              AnimatedTranslation.horizontal(
+                animation: _enterAnimations.appBarButton,
+                pixels: 24,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: FavoriteIconButton(
+                    isFavorite: article.isFavorite(),
+                    onPressed: article.toggleFavorite,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-      ),
-      body: ChangeNotifierProvider(
-        create: (context) => ArticleOverviewPageScope.of(
-          context,
-          article: widget.article,
-        )..initialize(),
-        builder: (context, _) {
-          final article = context.watch<ArticleOverviewPageScope>();
-
-          return CustomScrollView(
+          body: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
               SliverPadding(
@@ -164,21 +179,24 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                     AnimatedTranslation.vertical(
                       animation: _enterAnimations.readMoreButton,
                       pixels: 32,
-                      child: ElevatedButton(
-                        onPressed: () => _openArticleUrl(
-                          context,
-                          url: article.url,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: ElevatedButton(
+                          onPressed: () => _openArticleUrl(
+                            context,
+                            url: article.url,
+                          ),
+                          child: const Text('READ MORE'),
                         ),
-                        child: const Text('READ MORE'),
                       ),
                     ),
                   ],
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

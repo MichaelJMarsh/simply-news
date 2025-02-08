@@ -51,7 +51,7 @@ extension _CreateDatabase on sql.Transaction {
   Future<void> createFavoriteNewsArticleTable() async {
     return execute('''
       CREATE TABLE ${SqfliteFavoriteNewsArticleRepository.tableName} (
-        ${FavoriteNewsArticleField.articleId} TEXT NOT NULL PRIMARY KEY,
+        ${FavoriteNewsArticleField.article} TEXT NOT NULL PRIMARY KEY,
         ${FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch} INTEGER NOT NULL
       )
     ''');

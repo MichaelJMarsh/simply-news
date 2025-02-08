@@ -33,9 +33,9 @@ class DashboardPageScope extends ChangeNotifier {
   List<NewsArticle> get newsArticles => _newsArticles;
   List<NewsArticle> _newsArticles = [];
 
-  /// Returns the list of [NewsArticle] IDs which the user has added
-  /// to favorites.
-  List<String> _favoriteNewsArticleIds = [];
+  /// Returns the list of [NewsArticle] URLs that the user has added to their
+  /// favorites.
+  List<String> _favoriteNewsArticleUrls = [];
 
   /// Whether the dashboard page is loading.
   bool get isLoading => _isLoading;
@@ -44,7 +44,7 @@ class DashboardPageScope extends ChangeNotifier {
   Timer? _debounce;
 
   Future<void> initialize() async {
-    _favoriteNewsArticleIds = await _getFavoriteNewsArticleIds();
+    _favoriteNewsArticleUrls = await _getFavoriteNewsArticleUrls();
 
     _initializeFavoriteNewsArticleStreamSubscription();
 
@@ -67,17 +67,18 @@ class DashboardPageScope extends ChangeNotifier {
     _favoriteNewsArticleStreamSubscription = _favoriteNewsArticleRepository
         .changes
         .listen((favoriteNewsArticles) async {
-      _favoriteNewsArticleIds = favoriteNewsArticles
-          .map((favoriteNewsArticle) => favoriteNewsArticle.articleId)
+      _favoriteNewsArticleUrls = favoriteNewsArticles
+          .map((favoriteNewsArticle) => favoriteNewsArticle.article.url)
+          .whereType<String>()
           .toList();
 
       notifyListeners();
     });
   }
 
-  /// Whether the news article with the given [articleId] is a favorite.
-  bool isFavorite(String articleId) {
-    return _favoriteNewsArticleIds.contains(articleId);
+  /// Whether the news article with the given [articleUrl] is a favorite.
+  bool isFavorite(String? articleUrl) {
+    return _favoriteNewsArticleUrls.contains(articleUrl);
   }
 
   Future<void> searchNewsArticles(String query) async {
@@ -93,27 +94,28 @@ class DashboardPageScope extends ChangeNotifier {
   }
 
   /// Toggles the favorite status of the news article with the given [articleId].
-  Future<void> toggleFavorite(String articleId) async {
-    if (isFavorite(articleId)) {
-      return _favoriteNewsArticleRepository.delete(articleId);
+  Future<void> toggleFavorite(NewsArticle article) async {
+    if (isFavorite(article.url)) {
+      return _favoriteNewsArticleRepository.delete(article);
     }
 
     final now = clock.now();
     return _favoriteNewsArticleRepository.insert(
       FavoriteNewsArticle(
-        articleId: articleId,
+        article: article,
         insertionTime: now,
       ),
     );
   }
 
-  /// Returns the ID for all [FavoriteNewsArticle]s the user added to their
+  /// Returns the URLs for all [FavoriteNewsArticle]s the user added to their
   /// favorites.
-  Future<List<String>> _getFavoriteNewsArticleIds() async {
+  Future<List<String>> _getFavoriteNewsArticleUrls() async {
     final favoriteNewsArticles = await _favoriteNewsArticleRepository.list();
 
     return favoriteNewsArticles
-        .map((favoriteNewsArticle) => favoriteNewsArticle.articleId)
+        .map((favoriteNewsArticle) => favoriteNewsArticle.article.url)
+        .whereType<String>()
         .toList();
   }
 }
