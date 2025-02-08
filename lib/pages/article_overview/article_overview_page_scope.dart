@@ -29,9 +29,6 @@ class ArticleOverviewPageScope extends ChangeNotifier {
 
   final FavoriteNewsArticleRepository _favoriteNewsArticleRepository;
 
-  /// The unique ID of the news article.
-  String get id => _article.id;
-
   /// The URL to the news article.
   String get url => _article.url ?? '';
 
@@ -47,37 +44,36 @@ class ArticleOverviewPageScope extends ChangeNotifier {
   /// The content of the news article.
   String get content => _article.content?.substring(0, _contentLength) ?? '';
 
-  /// Returns the [NewsArticle] ID, if the user has added the current
+  /// Returns the [FavoriteNewsArticle], if the user has added the current
   /// news article to their favorites.
-  String? _favoriteNewsArticleId;
+  FavoriteNewsArticle? _favoriteNewsArticle;
 
   Future<void> initialize() async {
-    _favoriteNewsArticleId = await _getFavoriteNewsArticleId();
+    _favoriteNewsArticle = await _getFavoriteNewsArticle();
 
     notifyListeners();
   }
 
   /// Whether the current news article is a favorite.
-  bool isFavorite() => _favoriteNewsArticleId != null;
+  bool isFavorite() => _favoriteNewsArticle != null;
 
   /// Toggles the favorite status of the news article with the given [articleId].
   Future<void> toggleFavorite() async {
-    final articleId = _article.id;
-
     if (isFavorite()) {
-      await _favoriteNewsArticleRepository.delete(articleId);
+      await _favoriteNewsArticleRepository.delete(_article);
 
-      _favoriteNewsArticleId = null;
+      _favoriteNewsArticle = null;
     } else {
       final now = clock.now();
-      await _favoriteNewsArticleRepository.insert(
-        FavoriteNewsArticle(
-          articleId: articleId,
-          insertionTime: now,
-        ),
+      final favoriteNewsArticle = FavoriteNewsArticle(
+        article: _article,
+        insertionTime: now,
       );
 
-      _favoriteNewsArticleId = articleId;
+      await _favoriteNewsArticleRepository.insert(
+        favoriteNewsArticle,
+      );
+      _favoriteNewsArticle = favoriteNewsArticle;
     }
 
     notifyListeners();
@@ -85,10 +81,7 @@ class ArticleOverviewPageScope extends ChangeNotifier {
 
   /// Returns the ID for all [FavoriteNewsArticle]s the user added to their
   /// favorites.
-  Future<String?> _getFavoriteNewsArticleId() async {
-    final favoriteNewsArticle =
-        await _favoriteNewsArticleRepository.get(_article.id);
-
-    return favoriteNewsArticle?.articleId;
+  Future<FavoriteNewsArticle?> _getFavoriteNewsArticle() async {
+    return _favoriteNewsArticleRepository.get(_article.url ?? '');
   }
 }

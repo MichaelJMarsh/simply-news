@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:domain/domain.dart' hide Database;
 import 'package:sqflite/sqflite.dart';
@@ -26,36 +27,43 @@ class SqfliteFavoriteNewsArticleRepository
   Future<void> insert(FavoriteNewsArticle favoriteNewsArticle) async {
     await _database.insert(
       tableName,
-      favoriteNewsArticle.toSqfliteMap(),
+      {
+        FavoriteNewsArticleField.article: jsonEncode(
+          favoriteNewsArticle.article.toJson(),
+        ),
+        FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch:
+            favoriteNewsArticle.insertionTime.millisecondsSinceEpoch,
+      },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    // Add to the local list and emit updated state.
+    // Remove from the local list and emit updated state.
     _favoriteNewsArticles.add(favoriteNewsArticle);
     _eventController.add(List.from(_favoriteNewsArticles));
   }
 
   @override
-  Future<void> delete(String articleId) async {
+  Future<void> delete(NewsArticle newsArticle) async {
     await _database.delete(
       tableName,
-      where: '${FavoriteNewsArticleField.articleId} = ?',
-      whereArgs: [articleId],
+      where: '${FavoriteNewsArticleField.article} LIKE ?',
+      whereArgs: ['%"${newsArticle.url}"%'],
     );
 
-    // Remove from the local list and emit updated state.
     _favoriteNewsArticles.removeWhere(
-      (article) => article.articleId == articleId,
+      (favoriteNewsArticle) {
+        return favoriteNewsArticle.article.url == newsArticle.url;
+      },
     );
     _eventController.add(List.from(_favoriteNewsArticles));
   }
 
   @override
-  Future<FavoriteNewsArticle?> get(String articleId) async {
+  Future<FavoriteNewsArticle?> get(String articleUrl) async {
     final results = await _database.query(
       tableName,
-      where: '${FavoriteNewsArticleField.articleId} = ?',
-      whereArgs: [articleId],
+      where: '${FavoriteNewsArticleField.article} LIKE ?',
+      whereArgs: ['%"$articleUrl"%'],
     );
 
     if (results.isEmpty) return null;
@@ -73,11 +81,20 @@ class SqfliteFavoriteNewsArticleRepository
       orderBy: '$insertionDateField DESC',
     );
 
-    final favoriteNewsArticles =
-        results.map(FavoriteNewsArticle.fromSqfliteMap).toList();
+    final favoriteNewsArticles = results.map((map) {
+      final jsonArticle =
+          jsonDecode(map[FavoriteNewsArticleField.article] as String)
+              as Map<String, dynamic>;
+      return FavoriteNewsArticle(
+        article: NewsArticle.fromJson(jsonArticle),
+        insertionTime: DateTime.fromMillisecondsSinceEpoch(
+          map[FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch]
+              as int,
+        ),
+      );
+    }).toList();
 
     _favoriteNewsArticles = favoriteNewsArticles;
-
     return favoriteNewsArticles;
   }
 }
