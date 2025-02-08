@@ -18,6 +18,7 @@ class SimplyNewsApp extends StatefulWidget {
     required this.database,
     required this.getAppVersion,
     required this.share,
+    required this.urlLauncher,
     required this.favoriteNewsArticleRepository,
     required this.settingsRepository,
     required this.newsArticleService,
@@ -27,6 +28,7 @@ class SimplyNewsApp extends StatefulWidget {
 
   final GetAppVersion getAppVersion;
   final Share share;
+  final UrlLauncher urlLauncher;
 
   final FavoriteNewsArticleRepository favoriteNewsArticleRepository;
   final SettingsRepository settingsRepository;
@@ -53,6 +55,7 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
         Provider.value(value: widget.database),
         Provider.value(value: widget.getAppVersion),
         Provider.value(value: widget.share),
+        Provider.value(value: widget.urlLauncher),
         Provider.value(value: widget.favoriteNewsArticleRepository),
         Provider.value(value: widget.settingsRepository),
         Provider.value(value: widget.newsArticleService),

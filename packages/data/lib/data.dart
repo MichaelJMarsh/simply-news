@@ -2,10 +2,9 @@
 export 'src/manager/settings.dart';
 
 // Plugins
-export 'src/plugin/share_plugin.dart';
-
-// Remote
 export 'src/plugin/news_api_plugin.dart';
+export 'src/plugin/share_plugin.dart';
+export 'src/plugin/url_launcher_plugin.dart';
 
 // Sqflite
 export 'src/sqflite/sqflite_database.dart';
