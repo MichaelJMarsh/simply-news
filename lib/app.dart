@@ -16,21 +16,22 @@ class SimplyNewsApp extends StatefulWidget {
   const SimplyNewsApp({
     super.key,
     required this.database,
-    required this.generateUuid,
     required this.getAppVersion,
     required this.share,
     required this.favoriteNewsArticleRepository,
     required this.settingsRepository,
+    required this.newsArticleService,
   });
 
   final Database database;
 
-  final GenerateUuid generateUuid;
   final GetAppVersion getAppVersion;
   final Share share;
 
   final FavoriteNewsArticleRepository favoriteNewsArticleRepository;
   final SettingsRepository settingsRepository;
+
+  final NewsArticleService newsArticleService;
 
   @override
   State<SimplyNewsApp> createState() => _SimplyNewsAppState();
@@ -50,11 +51,11 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
     return MultiProvider(
       providers: [
         Provider.value(value: widget.database),
-        Provider.value(value: widget.generateUuid),
         Provider.value(value: widget.getAppVersion),
         Provider.value(value: widget.share),
         Provider.value(value: widget.favoriteNewsArticleRepository),
         Provider.value(value: widget.settingsRepository),
+        Provider.value(value: widget.newsArticleService),
         ChangeNotifierProvider(
           lazy: false,
           create: (_) => Settings(
