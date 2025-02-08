@@ -1,6 +1,6 @@
 import 'package:domain/src/model/favorite_news_article.dart';
 
-/// The interface for accessing favorited news articles (see [FavoriteAction]).
+/// The interface for accessing favorited news articles (see [FavoriteNewsArticle]).
 abstract class FavoriteNewsArticleRepository {
   const FavoriteNewsArticleRepository._();
 
@@ -12,10 +12,10 @@ abstract class FavoriteNewsArticleRepository {
   Future<void> insert(FavoriteNewsArticle favoriteNewsArticle);
 
   /// Removes a favorite news article from the database.
-  Future<void> delete(String actionId);
+  Future<void> delete(String articleId);
 
   /// Gets a favorite news article from the database.
-  Future<FavoriteNewsArticle?> get(String actionId);
+  Future<FavoriteNewsArticle?> get(String articleId);
 
   /// Returns a list of all favorite news articles.
   Future<List<FavoriteNewsArticle>> list();

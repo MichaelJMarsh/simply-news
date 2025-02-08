@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-/// A class that represents a favorite eco action.
+/// A class that represents a favorite news article.
 @immutable
 class FavoriteNewsArticle {
   /// Creates a new [FavoriteNewsArticle].
@@ -20,10 +20,10 @@ class FavoriteNewsArticle {
     );
   }
 
-  /// The ID of the corresponding [EcoAction].
+  /// The ID of the corresponding [FavoriteNewsArticle].
   final String articleId;
 
-  /// The time when the eco action was added to the favorites.
+  /// The time when the news article was added to the favorites.
   final DateTime insertionTime;
 
   @override

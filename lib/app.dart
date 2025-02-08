@@ -19,7 +19,7 @@ class SimplyNewsApp extends StatefulWidget {
     required this.generateUuid,
     required this.getAppVersion,
     required this.share,
-    required this.favoriteActionRepository,
+    required this.favoriteNewsArticleRepository,
     required this.settingsRepository,
   });
 
@@ -29,7 +29,7 @@ class SimplyNewsApp extends StatefulWidget {
   final GetAppVersion getAppVersion;
   final Share share;
 
-  final FavoriteNewsArticleRepository favoriteActionRepository;
+  final FavoriteNewsArticleRepository favoriteNewsArticleRepository;
   final SettingsRepository settingsRepository;
 
   @override
@@ -53,7 +53,7 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
         Provider.value(value: widget.generateUuid),
         Provider.value(value: widget.getAppVersion),
         Provider.value(value: widget.share),
-        Provider.value(value: widget.favoriteActionRepository),
+        Provider.value(value: widget.favoriteNewsArticleRepository),
         Provider.value(value: widget.settingsRepository),
         ChangeNotifierProvider(
           lazy: false,

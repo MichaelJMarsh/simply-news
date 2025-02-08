@@ -9,7 +9,7 @@ import 'package:uuid/uuid.dart';
 
 import 'app.dart';
 
-/// Initializes the database and other services, then returns the created [ThalloApp].
+/// Initializes the database and other services, then returns the created [SimplyNewsApp].
 Future<SimplyNewsApp> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -23,7 +23,7 @@ Future<SimplyNewsApp> bootstrap() async {
     generateUuid: const Uuid().v4,
     getAppVersion: _getAppVersion,
     share: const SharePlugin(),
-    favoriteActionRepository:
+    favoriteNewsArticleRepository:
         SqfliteFavoriteNewsArticleRepository(database.instance),
     settingsRepository: SqfliteSettingsRepository(database.instance),
   );
