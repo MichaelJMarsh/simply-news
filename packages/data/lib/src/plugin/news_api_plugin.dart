@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
 import 'package:domain/domain.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,39 +9,43 @@ class NewsApiPlugin implements NewsArticleService {
   static const _baseUrl = 'newsapi.org';
 
   @override
-  Future<NewsArticle?> get(String id) async {
-    final articles = await list();
-
-    final newsArticle = articles.firstWhereOrNull(
-      (newArticle) => newArticle.id == id,
-    );
-
-    return newsArticle;
-  }
-
-  @override
-  Future<List<NewsArticle>> list({
-    String countryCode = 'US',
-    int pageSize = 20,
+  Future<List<NewsArticle>> searchArticles({
+    required String query,
+    String searchIn = 'title,description,content',
+    String language = 'en',
+    String sortBy = 'publishedAt',
+    int pageSize = 10,
+    int page = 1,
   }) async {
     final queryParameters = {
-      'country': countryCode,
+      'q': query,
+      'searchIn': searchIn,
+      'language': language,
+      'sortBy': sortBy,
       'pageSize': pageSize.toString(),
+      'page': page.toString(),
       'apiKey': _apiKey,
     };
 
-    final uri = Uri.https(_baseUrl, '/v2/top-headlines', queryParameters);
+    final uri = Uri.https(_baseUrl, '/v2/everything', queryParameters);
     final response = await http.get(uri);
 
-    final isNotSuccessfulResponse = response.statusCode != 200;
-    if (isNotSuccessfulResponse) {
+    if (response.statusCode != 200) {
+      print(
+          'Error fetching articles: ${response.statusCode} - ${response.body}');
       throw Exception(
         'Failed to fetch articles (status: ${response.statusCode})',
       );
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
+    if (!data.containsKey('articles')) {
+      print('Unexpected API response: $data');
+      return [];
+    }
+
     final articlesJson = data['articles'] as List<dynamic>;
+    print('🔍 Found ${articlesJson.length} articles for query "$query"');
 
     return articlesJson
         .map((json) => NewsArticle.fromJson(json as Map<String, dynamic>))

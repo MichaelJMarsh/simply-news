@@ -41,9 +41,10 @@ class DashboardPageScope extends ChangeNotifier {
   bool get isLoading => _isLoading;
   bool _isLoading = true;
 
+  Timer? _debounce;
+
   Future<void> initialize() async {
     _favoriteNewsArticleIds = await _getFavoriteNewsArticleIds();
-    _newsArticles = await _newsArticleService.list();
 
     _initializeFavoriteNewsArticleStreamSubscription();
 
@@ -54,6 +55,8 @@ class DashboardPageScope extends ChangeNotifier {
 
   @override
   void dispose() {
+    _debounce?.cancel();
+
     _favoriteNewsArticleStreamSubscription?.cancel();
 
     super.dispose();
@@ -75,6 +78,18 @@ class DashboardPageScope extends ChangeNotifier {
   /// Whether the news article with the given [articleId] is a favorite.
   bool isFavorite(String articleId) {
     return _favoriteNewsArticleIds.contains(articleId);
+  }
+
+  Future<void> searchNewsArticles(String query) async {
+    _debounce?.cancel();
+
+    // Debounce the search query to avoid making too many requests and allow
+    // for smoother frontend experience.
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      _newsArticles = await _newsArticleService.searchArticles(query: query);
+
+      notifyListeners();
+    });
   }
 
   /// Toggles the favorite status of the news article with the given [articleId].
