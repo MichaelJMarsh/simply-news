@@ -21,6 +21,7 @@ Future<SimplyNewsApp> bootstrap() async {
     database: database,
     getAppVersion: _getAppVersion,
     share: const SharePlugin(),
+    urlLauncher: const UrlLauncherPlugin(),
     favoriteNewsArticleRepository:
         SqfliteFavoriteNewsArticleRepository(database.instance),
     settingsRepository: SqfliteSettingsRepository(database.instance),

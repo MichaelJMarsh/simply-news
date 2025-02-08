@@ -12,5 +12,6 @@ export 'src/repository/settings_repository.dart';
 export 'src/service/get_app_version.dart';
 export 'src/service/news_article_service.dart';
 export 'src/service/share.dart';
+export 'src/service/url_launcher.dart';
 
 export 'src/database.dart';

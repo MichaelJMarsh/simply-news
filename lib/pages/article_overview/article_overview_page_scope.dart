@@ -29,30 +29,30 @@ class ArticleOverviewPageScope extends ChangeNotifier {
 
   final FavoriteNewsArticleRepository _favoriteNewsArticleRepository;
 
-  /// The news article to display.
-  NewsArticle? _newsArticle;
+  /// The unique ID of the news article.
+  String get id => _article.id;
+
+  /// The URL to the news article.
+  String get url => _article.url ?? '';
 
   /// The title of the news article.
-  String get title => _newsArticle?.title ?? '';
+  String get title => _article.title ?? '';
 
   /// The author of the news article.
-  String get author => _newsArticle?.author ?? '';
+  String get author => _article.author ?? '';
+
+  /// The length at which the News API truncates the content of the news article.
+  static const _contentLength = 200;
 
   /// The content of the news article.
-  String get content => _newsArticle?.content ?? '';
+  String get content => _article.content?.substring(0, _contentLength) ?? '';
 
   /// Returns the [NewsArticle] ID, if the user has added the current
   /// news article to their favorites.
   String? _favoriteNewsArticleId;
 
-  /// Whether the dashboard page is loading.
-  bool get isLoading => _isLoading;
-  bool _isLoading = true;
-
   Future<void> initialize() async {
     _favoriteNewsArticleId = await _getFavoriteNewsArticleId();
-
-    _isLoading = false;
 
     notifyListeners();
   }

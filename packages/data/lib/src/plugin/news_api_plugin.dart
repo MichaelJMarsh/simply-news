@@ -31,22 +31,15 @@ class NewsApiPlugin implements NewsArticleService {
     final response = await http.get(uri);
 
     if (response.statusCode != 200) {
-      print(
-          'Error fetching articles: ${response.statusCode} - ${response.body}');
       throw Exception(
         'Failed to fetch articles (status: ${response.statusCode})',
       );
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
-    if (!data.containsKey('articles')) {
-      print('Unexpected API response: $data');
-      return [];
-    }
+    if (!data.containsKey('articles')) return [];
 
     final articlesJson = data['articles'] as List<dynamic>;
-    print('🔍 Found ${articlesJson.length} articles for query "$query"');
-
     return articlesJson
         .map((json) => NewsArticle.fromJson(json as Map<String, dynamic>))
         .toList();

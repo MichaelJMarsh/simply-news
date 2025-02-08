@@ -150,7 +150,7 @@ class _ErrorScreen extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       height: 20 / 14,
-                      color: colorScheme.onPrimary.withOpacity(0.64),
+                      color: colorScheme.onPrimary.withValues(alpha: 0.64),
                     ),
                   ),
                 ],
