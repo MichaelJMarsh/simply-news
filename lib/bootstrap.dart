@@ -5,7 +5,6 @@ import 'package:data/data.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
-import 'package:uuid/uuid.dart';
 
 import 'app.dart';
 
@@ -20,12 +19,12 @@ Future<SimplyNewsApp> bootstrap() async {
 
   return SimplyNewsApp(
     database: database,
-    generateUuid: const Uuid().v4,
     getAppVersion: _getAppVersion,
     share: const SharePlugin(),
     favoriteNewsArticleRepository:
         SqfliteFavoriteNewsArticleRepository(database.instance),
     settingsRepository: SqfliteSettingsRepository(database.instance),
+    newsArticleService: NewsApiPlugin(),
   );
 }
 
