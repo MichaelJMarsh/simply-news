@@ -133,6 +133,9 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
     const searchBarVerticalPadding = 8.0;
     final headerHeight = appBarHeight + searchBarHeight;
 
+    final hasReachedLastArticle =
+        !dashboard.hasMoreArticles && dashboard.newsArticles.isNotEmpty;
+
     Widget body = RefreshIndicator(
       onRefresh: dashboard.refreshArticles,
       child: CustomScrollView(
@@ -140,10 +143,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverPadding(
-            padding: EdgeInsets.only(
-              top: 24,
-              bottom: bottomPadding,
-            ),
+            padding: const EdgeInsets.only(top: 24),
             sliver: SliverList.separated(
               itemCount: dashboard.newsArticles.length,
               separatorBuilder: (_, __) => const Divider(),
@@ -168,13 +168,62 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
           ),
           if (dashboard.isLoadingMore)
             const SliverToBoxAdapter(
+              key: Key('loading_more_articles_indicator'),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Center(
                   child: LoadingIndicator(),
                 ),
               ),
+            )
+          else if (hasReachedLastArticle)
+            SliverToBoxAdapter(
+              key: const Key('end_of_articles_indicator'),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 48,
+                  vertical: 16,
+                ),
+                child: Center(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: colorScheme.primary.withValues(alpha: 0.64),
+                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      color: colorScheme.primary.withValues(alpha: 0.08),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: DefaultTextStyle.merge(
+                        textAlign: TextAlign.center,
+                        child: Column(
+                          spacing: 8,
+                          children: [
+                            Text(
+                              'It seems you have reached the end of available '
+                              'new articles.',
+                              style: TextStyle(color: colorScheme.primary),
+                            ),
+                            Text(
+                              'UPDATE THE NEWS SOURCE OR SEARCH QUERY FOR MORE '
+                              'ARTICLES',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.48,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
+          SliverToBoxAdapter(child: SizedBox(height: bottomPadding)),
         ],
       ),
     );
