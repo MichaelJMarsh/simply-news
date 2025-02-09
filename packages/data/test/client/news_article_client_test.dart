@@ -28,7 +28,7 @@ void main() {
     group('fetchSources', () {
       test('returns list of sources when status code is 200 and valid JSON',
           () async {
-        final fakeResponse = jsonEncode({
+        final mockResponse = jsonEncode({
           'status': 'ok',
           'sources': [
             {
@@ -53,7 +53,7 @@ void main() {
         });
 
         when(mockHttpClient.get(any)).thenAnswer(
-          (_) async => http.Response(fakeResponse, 200,
+          (_) async => http.Response(mockResponse, 200,
               headers: {'Content-Type': 'application/json'}),
         );
 
@@ -64,11 +64,11 @@ void main() {
       });
 
       test('returns empty list if "sources" key not present', () async {
-        final fakeResponse = jsonEncode({'status': 'ok'});
+        final mockResponse = jsonEncode({'status': 'ok'});
 
         when(mockHttpClient.get(any)).thenAnswer(
           (_) async => http.Response(
-            fakeResponse,
+            mockResponse,
             200,
             headers: {'Content-Type': 'application/json'},
           ),
@@ -93,7 +93,7 @@ void main() {
     group('fetchArticlesBySource', () {
       test('returns SearchResult with articles when status code is 200',
           () async {
-        final fakeResponse = jsonEncode({
+        final mockResponse = jsonEncode({
           'status': 'ok',
           'totalResults': 2,
           'articles': [
@@ -110,7 +110,7 @@ void main() {
 
         when(mockHttpClient.get(any)).thenAnswer(
           (_) async => http.Response(
-            fakeResponse,
+            mockResponse,
             200,
             headers: {'Content-Type': 'application/json'},
           ),
@@ -124,13 +124,13 @@ void main() {
       });
 
       test('returns empty result if "articles" key is missing', () async {
-        final fakeResponse = jsonEncode({
+        final mockResponse = jsonEncode({
           'status': 'ok',
           'totalResults': 0,
         });
 
         when(mockHttpClient.get(any)).thenAnswer(
-          (_) async => http.Response(fakeResponse, 200),
+          (_) async => http.Response(mockResponse, 200),
         );
 
         final result = await client.fetchArticlesBySource(sourceId: 'abc-news');
@@ -153,7 +153,7 @@ void main() {
     group('searchArticles', () {
       test('returns SearchResult with articles when status code is 200',
           () async {
-        final fakeResponse = jsonEncode({
+        final mockResponse = jsonEncode({
           'status': 'ok',
           'totalResults': 2,
           'articles': [
@@ -170,7 +170,7 @@ void main() {
 
         when(mockHttpClient.get(any)).thenAnswer(
           (_) async => http.Response(
-            fakeResponse,
+            mockResponse,
             200,
             headers: {'Content-Type': 'application/json'},
           ),
@@ -183,9 +183,9 @@ void main() {
       });
 
       test('returns empty result if no "articles" key in JSON', () async {
-        final fakeResponse = jsonEncode({'status': 'ok'});
+        final mockResponse = jsonEncode({'status': 'ok'});
         when(mockHttpClient.get(any)).thenAnswer(
-          (_) async => http.Response(fakeResponse, 200),
+          (_) async => http.Response(mockResponse, 200),
         );
 
         final result = await client.searchArticles(query: 'xyz');

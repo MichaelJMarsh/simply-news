@@ -19,64 +19,66 @@ void main() {
     sharePlugin = SharePlugin(delegate: mockShareWrapper);
   });
 
-  test('send calls ShareDelegate.share and returns true if successful',
-      () async {
-    const testContent = 'Test content';
-    const testSubject = 'Test subject';
-    const testMessage = 'Test message';
-    const testRect = Rect.fromLTWH(0, 0, 100, 100);
+  group('SharePlugin', () {
+    test('send calls ShareDelegate.share and returns true if successful',
+        () async {
+      const testContent = 'Test content';
+      const testSubject = 'Test subject';
+      const testMessage = 'Test message';
+      const testRect = Rect.fromLTWH(0, 0, 100, 100);
 
-    when(mockShareWrapper.share(
-      any,
-      subject: anyNamed('subject'),
-      sharePositionOrigin: anyNamed('sharePositionOrigin'),
-    )).thenAnswer(
-      (_) async => const package.ShareResult(
-        'success',
-        package.ShareResultStatus.success,
-      ),
-    );
+      when(mockShareWrapper.share(
+        any,
+        subject: anyNamed('subject'),
+        sharePositionOrigin: anyNamed('sharePositionOrigin'),
+      )).thenAnswer(
+        (_) async => const package.ShareResult(
+          'success',
+          package.ShareResultStatus.success,
+        ),
+      );
 
-    final result = await sharePlugin.send(
-      content: testContent,
-      subject: testSubject,
-      message: testMessage,
-      sharePositionOrigin: testRect,
-    );
+      final result = await sharePlugin.send(
+        content: testContent,
+        subject: testSubject,
+        message: testMessage,
+        sharePositionOrigin: testRect,
+      );
 
-    expect(result, isTrue);
-    verify(mockShareWrapper.share(
-      '$testMessage\n\n$testContent',
-      subject: testSubject,
-      sharePositionOrigin: testRect,
-    )).called(1);
-  });
+      expect(result, isTrue);
+      verify(mockShareWrapper.share(
+        '$testMessage\n\n$testContent',
+        subject: testSubject,
+        sharePositionOrigin: testRect,
+      )).called(1);
+    });
 
-  test('send returns false if ShareResult is unavailable', () async {
-    const testContent = 'Unavailable content';
-    const testRect = Rect.fromLTWH(0, 0, 100, 100);
+    test('send returns false if ShareResult is unavailable', () async {
+      const testContent = 'Unavailable content';
+      const testRect = Rect.fromLTWH(0, 0, 100, 100);
 
-    when(mockShareWrapper.share(
-      any,
-      subject: anyNamed('subject'),
-      sharePositionOrigin: anyNamed('sharePositionOrigin'),
-    )).thenAnswer(
-      (_) async => const package.ShareResult(
-        'unavailable',
-        package.ShareResultStatus.unavailable,
-      ),
-    );
+      when(mockShareWrapper.share(
+        any,
+        subject: anyNamed('subject'),
+        sharePositionOrigin: anyNamed('sharePositionOrigin'),
+      )).thenAnswer(
+        (_) async => const package.ShareResult(
+          'unavailable',
+          package.ShareResultStatus.unavailable,
+        ),
+      );
 
-    final result = await sharePlugin.send(
-      content: testContent,
-      sharePositionOrigin: testRect,
-    );
+      final result = await sharePlugin.send(
+        content: testContent,
+        sharePositionOrigin: testRect,
+      );
 
-    expect(result, isFalse);
-    verify(mockShareWrapper.share(
-      testContent,
-      subject: null,
-      sharePositionOrigin: testRect,
-    )).called(1);
+      expect(result, isFalse);
+      verify(mockShareWrapper.share(
+        testContent,
+        subject: null,
+        sharePositionOrigin: testRect,
+      )).called(1);
+    });
   });
 }
