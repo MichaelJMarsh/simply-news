@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:domain/domain.dart';
 
-import 'package:simply_news/widgets/widgets.dart';
+import 'favorite_icon_button.dart';
 
 class NewsArticleCard extends StatelessWidget {
   /// Creates a new [NewsArticleCard].

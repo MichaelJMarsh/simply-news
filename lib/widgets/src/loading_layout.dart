@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-import 'package:simply_news/widgets/widgets.dart';
+import 'loading_indicator.dart';
 
 class LoadingLayout extends StatelessWidget {
   /// Creates a new [LoadingLayout].
