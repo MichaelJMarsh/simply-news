@@ -290,8 +290,8 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                       'floating_action_button_text.${isFavoriteArticle ? 'favorite' : 'unfavorite'}',
                     ),
                     isFavoriteArticle
-                        ? 'ADD TO FAVORITES'
-                        : 'REMOVE FROM FAVORITES',
+                        ? 'REMOVE FROM FAVORITES'
+                        : 'ADD TO FAVORITES',
                     style: const TextStyle(fontSize: 24),
                   ),
                 ),
