@@ -34,6 +34,9 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
   /// Timer to start the enter animation.
   late final Timer _enterAnimationsStartTimer;
 
+  /// The state of the [ScaffoldMessenger] to show snack bars.
+  ScaffoldMessengerState? _scaffoldMessenger;
+
   @override
   void initState() {
     super.initState();
@@ -52,9 +55,18 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    _scaffoldMessenger ??= ScaffoldMessenger.maybeOf(context);
+  }
+
+  @override
   void dispose() {
     _enterAnimationsStartTimer.cancel();
     _enterAnimationsController.dispose();
+
+    _scaffoldMessenger = null;
 
     super.dispose();
   }
@@ -65,17 +77,19 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
     required String url,
   }) async {
     final urlLauncher = context.read<UrlLauncher>();
-
     final canLaunch = await urlLauncher.canLaunch(url);
 
     if (!context.mounted) return;
 
     if (!canLaunch) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      _scaffoldMessenger?.hideCurrentSnackBar();
+      _scaffoldMessenger?.showSnackBar(
         const SnackBar(
+          backgroundColor: Colors.red,
           content: Text(
             'Could not open the article. Please check your connection '
             'and try again.',
+            style: TextStyle(color: Colors.white),
           ),
         ),
       );
@@ -84,6 +98,39 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
     }
 
     await urlLauncher.launch(url);
+  }
+
+  /// Shares the article's URL.
+  Future<void> _shareArticle(
+    BuildContext context, {
+    required String articleUrl,
+  }) async {
+    final renderBox = context.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final success = await context.read<Share>().send(
+          content: articleUrl,
+          sharePositionOrigin:
+              renderBox.localToGlobal(Offset.zero) & renderBox.size,
+          subject: 'Simply News',
+          message: 'Check out this article I found on Simply News!',
+        );
+
+    if (!context.mounted) return;
+
+    if (!success && context.mounted) {
+      const snackBar = SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+          'There was an error when trying to share the new article. '
+          'Please try again later.',
+          style: TextStyle(color: Colors.white),
+        ),
+      );
+
+      _scaffoldMessenger?.hideCurrentSnackBar();
+      _scaffoldMessenger?.showSnackBar(snackBar);
+    }
   }
 
   @override
@@ -95,6 +142,8 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
       )..initialize(),
       builder: (context, _) {
         final article = context.watch<ArticleOverviewPageScope>();
+        final articleUrl = article.url;
+
         return Scaffold(
           appBar: AppBar(
             title: AnimatedTranslation.vertical(
@@ -176,18 +225,43 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                       ),
                     ),
                     const SizedBox(height: 40),
-                    AnimatedTranslation.vertical(
-                      animation: _enterAnimations.readMoreButton,
-                      pixels: 32,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: ElevatedButton(
-                          onPressed: () => _openArticleUrl(
-                            context,
-                            url: article.url,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: AnimatedTranslation.vertical(
+                              animation: _enterAnimations.readMoreButton,
+                              pixels: 32,
+                              child: ElevatedButton(
+                                onPressed: () => _openArticleUrl(
+                                  context,
+                                  url: article.url,
+                                ),
+                                child: const Text('READ MORE'),
+                              ),
+                            ),
                           ),
-                          child: const Text('READ MORE'),
-                        ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: AnimatedTranslation.vertical(
+                              animation: _enterAnimations.shareButton,
+                              pixels: 32,
+                              child: Builder(
+                                builder: (context) {
+                                  return ElevatedButton(
+                                    onPressed: () => _shareArticle(
+                                      context,
+                                      articleUrl: articleUrl,
+                                    ),
+                                    child: const Text('SHARE'),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -230,6 +304,10 @@ class _EnterAnimations {
         ),
         readMoreButton = CurvedAnimation(
           parent: controller,
+          curve: const Interval(0.475, 0.975, curve: Curves.fastOutSlowIn),
+        ),
+        shareButton = CurvedAnimation(
+          parent: controller,
           curve: const Interval(0.500, 1.000, curve: Curves.fastOutSlowIn),
         );
 
@@ -244,4 +322,5 @@ class _EnterAnimations {
   final Animation<double> articleContent;
 
   final Animation<double> readMoreButton;
+  final Animation<double> shareButton;
 }
