@@ -42,7 +42,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
     super.initState();
 
     _enterAnimationsController = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: const Duration(seconds: 2),
       vsync: this,
     );
 
@@ -144,6 +144,8 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
         final article = context.watch<ArticleOverviewPageScope>();
         final articleUrl = article.url;
 
+        final isFavoriteArticle = article.isFavorite();
+
         return Scaffold(
           appBar: AppBar(
             title: AnimatedTranslation.vertical(
@@ -169,7 +171,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                 child: Padding(
                   padding: const EdgeInsets.only(right: 16),
                   child: FavoriteIconButton(
-                    isFavorite: article.isFavorite(),
+                    isFavorite: isFavoriteArticle,
                     onPressed: article.toggleFavorite,
                   ),
                 ),
@@ -269,6 +271,33 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
               ),
             ],
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: AnimatedTranslation.vertical(
+            animation: _enterAnimations.saveButton,
+            pixels: 32,
+            child: FloatingActionButton.extended(
+              onPressed: article.toggleFavorite,
+              label: AnimatedSize(
+                curve: Curves.fastOutSlowIn,
+                duration: const Duration(milliseconds: 250),
+                child: AnimatedSwitcher(
+                  switchInCurve: Curves.easeIn,
+                  switchOutCurve: Curves.easeOut,
+                  duration: const Duration(milliseconds: 300),
+                  child: Text(
+                    key: Key(
+                      'floating_action_button_text.${isFavoriteArticle ? 'favorite' : 'unfavorite'}',
+                    ),
+                    isFavoriteArticle
+                        ? 'ADD TO FAVORITES'
+                        : 'REMOVE FROM FAVORITES',
+                    style: const TextStyle(fontSize: 24),
+                  ),
+                ),
+              ),
+            ),
+          ),
         );
       },
     );
@@ -280,35 +309,39 @@ class _EnterAnimations {
   _EnterAnimations(this.controller)
       : appBarButton = CurvedAnimation(
           parent: controller,
-          curve: const Interval(0, 0.500, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0.000, 0.250, curve: Curves.fastOutSlowIn),
         ),
         appBarTitle = CurvedAnimation(
           parent: controller,
-          curve: const Interval(0.050, 0.550, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0.025, 0.275, curve: Curves.fastOutSlowIn),
         ),
         articleTitle = CurvedAnimation(
           parent: controller,
-          curve: const Interval(0.200, 0.700, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0.100, 0.350, curve: Curves.fastOutSlowIn),
         ),
         articleAuthor = CurvedAnimation(
           parent: controller,
-          curve: const Interval(0.250, 0.750, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0.125, 0.375, curve: Curves.fastOutSlowIn),
         ),
         divider = CurvedAnimation(
           parent: controller,
-          curve: const Interval(0.300, 0.800, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0.150, 0.400, curve: Curves.fastOutSlowIn),
         ),
         articleContent = CurvedAnimation(
           parent: controller,
-          curve: const Interval(0.400, 0.900, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0.200, 0.450, curve: Curves.fastOutSlowIn),
         ),
         readMoreButton = CurvedAnimation(
           parent: controller,
-          curve: const Interval(0.475, 0.975, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0.250, 0.500, curve: Curves.fastOutSlowIn),
         ),
         shareButton = CurvedAnimation(
           parent: controller,
-          curve: const Interval(0.500, 1.000, curve: Curves.fastOutSlowIn),
+          curve: const Interval(0.275, 0.525, curve: Curves.fastOutSlowIn),
+        ),
+        saveButton = CurvedAnimation(
+          parent: controller,
+          curve: const Interval(0.350, 0.600, curve: Curves.fastOutSlowIn),
         );
 
   final AnimationController controller;
@@ -323,4 +356,6 @@ class _EnterAnimations {
 
   final Animation<double> readMoreButton;
   final Animation<double> shareButton;
+
+  final Animation<double> saveButton;
 }
