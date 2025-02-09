@@ -1,122 +1,132 @@
 # Simply News
 
-A **Flutter-based** mobile app that fetches news from [NewsAPI.org](https://newsapi.org) and displays them in a clear, text-focused interface. This project is part of a Headspace Mobile Engineering sample assignment.
-
----
-
-## Table of Contents
-
-- [Simply News](#simply-news)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [Project Structure](#project-structure)
-  - [Prerequisites](#prerequisites)
-  - [Setup \& Installation](#setup--installation)
+A **Flutter** app that fetches headlines from [NewsAPI.org](https://newsapi.org) and displays them in a clean, text-focused interface. Built as part of a Headspace Mobile Engineering sample assignment.
 
 ---
 
 ## Features
 
-1. **Text-Only News Display**: Simplified, text-focused UI for reading articles.
-2. **Save Articles**: “Save” or “Favorite” icon allows users to store articles locally (e.g. using SQLite).
-3. **Auto-Refresh**: Periodic background refresh fetches the latest headlines.
-4. **Unit Testing**: Basic test coverage for core business logic.
+1. **Text-Only News** – Minimalist news reading experience.
+2. **Save / Favorite Articles** – Local storage (e.g., SQLite) for saved headlines.
+3. **Auto-Refresh** – Background service to keep news up-to-date.
+4. **Testing** – Basic coverage for core business logic and widgets.
 
 ---
 
 ## Project Structure
 
-A high-level overview of how the code is organized (folders may vary based on personal preference):
+This project follows the **Clean Architecture** pattern, separating concerns into **Data**, **Domain**, and **UI** layers for better scalability and maintainability.
 
-lib/
-├── main.dart # App entry point
-├── data/ # Data sources, models, API clients
-├── ui/ # Presentation layer (Widgets, Screens)
-├── services/ # Background services, refresh logic
-└── utils/ # Helper methods, constants
-test/ # Unit tests
-pubspec.yaml # Dependency configuration
+```plaintext
+android/              # Android-specific code
+build/                # Generated files
+ios/                  # iOS-specific code
+lib/                  # Main source code
+├── pages/            # Screens and UI pages
+├── widgets/          # Reusable UI components
+├── app_theme.dart    # App-wide theme configuration
+├── app.dart          # Root app widget
+├── bootstrap.dart    # Initialization logic
+├── firebase_options.dart # Firebase configuration
+├── main.dart         # App entry point
+├── runner.dart       # App bootstrapper
+packages/             # Internal modular packages
+├── data/             # Data sources (API clients, local storage, plugins)
+├── domain/           # Business logic, models, repositories, services
+test/                 # Unit and widget tests
+pubspec.yaml          # Dependency configuration
+README.md             # Documentation
+```
 
 ---
 
 ## Prerequisites
 
-- **Flutter SDK** (2.0+ recommended)
-- **Dart** (comes bundled with Flutter)
-- **Android Studio / Xcode** (depending on your target platform)
-  - For Android emulation, ensure you have the latest **Android SDK** installed.
-  - For iOS simulation, ensure you have **Xcode** 12+.
+- Flutter SDK (version 3.27.4)
+- Dart (included with Flutter)
+- Android Studio or Xcode (for emulators/simulators)
+- NewsAPI.org API key (store securely in real-world scenarios)
 
-> **Note**: You will need a [NewsAPI.org](https://newsapi.org) API key. Usually this is provided via a config file or environment variable (e.g., `lib/.env` or stored in Dart code for the sample). Please remember to **safeguard** sensitive keys in production.
+**Note:** The API key is fetched from Firebase Remote Config. You can use the current setup if there are still free API calls remaining. Otherwise, add your own [NewsAPI.org](https://newsapi.org) API key manually by updating the following line in `lib/bootstrap.dart`:
+
+```bash
+NewsArticlePlugin(apiKey: "YOUR_NEWSAPI_KEY")
+```
 
 ---
 
 ## Setup & Installation
 
-1. **Clone or Download the Repository**
+1. Clone or Download this repository:
 
-   ```bash
-   git clone https://github.com/YourUser/SimplyNews.git
-   cd SimplyNews
+```bash
+git clone https://github.com/MichaelJMarsh/simply-news.git
+cd simply_news
+```
 
-   2.	Install Dependencies
-   ```
+2. Install Dependencies:
 
+```bash
 flutter pub get
+```
 
-This pulls in all required Dart and Flutter packages.
+3. Run the App:
 
-Android 1. Open an Android Emulator
-• Via Android Studio: Open AVD Manager and run a virtual device.
-• Or from CLI:
+#### Android
 
-emulator -avd <YOUR_EMULATOR_NAME>
+- Launch an emulator (using AVD Manager in Android Studio)
+- Run:
 
-    2.	Run the App
-
+```bash
 flutter run
+```
 
-If multiple devices are connected/emulators running, specify the device:
+- If multiple devices/emulators are connected, specify a device:
 
+```bash
 flutter run -d emulator-5554
+```
 
-(Replace emulator-5554 with the actual device ID.)
+#### iOS
 
-iOS 1. iOS Simulator
-• Launch Xcode and open the Simulator, or from the terminal:
+- Launch the iOS Simulator (via Xcode or CLI):
 
+```bash
 open -a Simulator
+```
 
-    2.	Run the App
+- Run:
 
+```bash
 flutter run
+```
 
-If you have multiple devices, specify the iOS simulator device:
+- To specify a device:
 
-flutter run -d <device_id>
+```bash
+flutter run -d iPhone-13
+```
 
-(e.g., flutter run -d iPhone-13)
+---
 
-    Important: Make sure you have CocoaPods installed (sudo gem install cocoapods) and that your Xcode command-line tools are correctly configured for iOS builds.
+## Usage
 
-Usage 1. Launching
-Once the app is running, you will see a list of news articles. 2. Reading Articles
-Tap on an article to view its details in a clean, text-based format. 3. Saving Articles
-Tap the “Save”/“Favorite” icon on any article. This will store it in the local database. 4. Auto Refresh
-The app periodically fetches fresh content in the background. You can also perform manual refresh if implemented (e.g., pull to refresh).
+1. **Launch the app** to view the latest articles on the **dashboard**.
+2. **Tap an article** to read a **text-focused** view.
+3. **Save (favorite) an article** locally by tapping the **"ADD TO FAVORITES"** floating action button or **favorite icon**.
+4. **Access saved articles** anytime by navigating to the **Favorites Page**.
+5. **Scroll down on the dashboard** to load more articles via **paginated scrolling** (new articles load until no more are available).
+6. **Enjoy automatic refresh** via the background service, or manually trigger a refresh by pulling down from the top of the dashboard.
 
-Testing
-• Unit Tests are located in the test/ directory.
-• Run tests via:
+---
 
+## Testing
+
+- Unit tests are located in the `test/` directory.
+- Run tests with:
+
+```bash
 flutter test
+```
 
-    •	Any integration or widget tests (if included) can be similarly run with the same command, depending on the test suite organization.
-
-Additional Notes
-• This sample follows a minimal styling approach to match the requirement for a clean, text-only format.
-• The background service/worker logic can vary between platforms. For simplicity, a background process or a timer-based approach might be used here.
-• For production usage, consider secure storage solutions for API keys, user preferences, and offline data.
-
-Thank you for reviewing Simply News!
-Please reach out with any questions or suggestions you might have.
+Thank you for taking the time to explore Simply News!
