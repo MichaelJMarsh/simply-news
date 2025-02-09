@@ -55,9 +55,11 @@ flutter pub get
 ```
 
 3. Run the App:
-   - Android
-   - Launch an emulator (using AVD Manager in Android Studio)
-   - Run:
+
+#### Android
+
+- Launch an emulator (using AVD Manager in Android Studio)
+- Run:
 
 ```bash
 flutter run
@@ -69,7 +71,8 @@ flutter run
 flutter run -d emulator-5554
 ```
 
-- iOS
+#### iOS
+
 - Launch the iOS Simulator (via Xcode or CLI):
 
 ```bash
@@ -94,8 +97,8 @@ flutter run -d iPhone-13
 
 1. Launch the app to view the latest articles.
 2. Tap an article to read a text-focused view.
-3. Save (favorite) the article locally by tapping the Save floating action button or favorite icon button.
-4. Enjoy automatic refresh via the background service, or manually trigger a refresh (if pull-to-refresh is implemented).
+3. Save (favorite) the article locally by tapping the "ADD TO FAVORITES" floating action button or favorite icon button.
+4. Enjoy automatic refresh via the background service, or manually trigger a refresh on pulldown from the top of the dashboard.
 
 ---
 
@@ -108,5 +111,4 @@ flutter run -d iPhone-13
 flutter test
 ```
 
-Thank you for exploring Simply News!
-Feel free to reach out with any questions or suggestions.
+Thank you for taking the time to explore Simply News!
