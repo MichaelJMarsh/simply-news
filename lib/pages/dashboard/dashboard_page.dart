@@ -358,7 +358,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                     key: const Key('search_bar'),
                     hintText: 'Search for news articles...',
                     focusNode: _searchFocusNode,
-                    onChanged: dashboard.searchNewsArticles,
+                    textInputAction: TextInputAction.search,
                     onSubmitted: dashboard.searchNewsArticles,
                   ),
                 ),

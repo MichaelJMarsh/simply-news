@@ -35,7 +35,7 @@ Future<SimplyNewsApp> bootstrap() async {
     favoriteNewsArticleRepository:
         SqfliteFavoriteNewsArticleRepository(database.instance),
     settingsRepository: SqfliteSettingsRepository(database.instance),
-    newsArticleService: NewsArticlePlugin(apiKey: remoteConfig.newsApiKey),
+    newsArticleService: NewsArticleClient(apiKey: remoteConfig.newsApiKey),
   );
 }
 
