@@ -90,66 +90,6 @@ void main() {
       });
     });
 
-    group('fetchArticlesBySource', () {
-      test('returns SearchResult with articles when status code is 200',
-          () async {
-        final mockResponse = jsonEncode({
-          'status': 'ok',
-          'totalResults': 2,
-          'articles': [
-            {
-              'title': 'Article 1',
-              'url': 'https://example.com/1',
-            },
-            {
-              'title': 'Article 2',
-              'url': 'https://example.com/2',
-            },
-          ],
-        });
-
-        when(mockHttpClient.get(any)).thenAnswer(
-          (_) async => http.Response(
-            mockResponse,
-            200,
-            headers: {'Content-Type': 'application/json'},
-          ),
-        );
-
-        final result = await client.fetchArticlesBySource(sourceId: 'abc-news');
-        expect(result.totalResults, 2);
-        expect(result.articles.length, 2);
-        expect(result.articles[0].title, 'Article 1');
-        expect(result.articles[1].url, 'https://example.com/2');
-      });
-
-      test('returns empty result if "articles" key is missing', () async {
-        final mockResponse = jsonEncode({
-          'status': 'ok',
-          'totalResults': 0,
-        });
-
-        when(mockHttpClient.get(any)).thenAnswer(
-          (_) async => http.Response(mockResponse, 200),
-        );
-
-        final result = await client.fetchArticlesBySource(sourceId: 'abc-news');
-        expect(result.articles, isEmpty);
-        expect(result.totalResults, 0);
-      });
-
-      test('throws exception if status code != 200', () async {
-        when(mockHttpClient.get(any)).thenAnswer(
-          (_) async => http.Response('Bad Request', 400),
-        );
-
-        expect(
-          () => client.fetchArticlesBySource(sourceId: 'abc-news'),
-          throwsA(isA<Exception>()),
-        );
-      });
-    });
-
     group('searchArticles', () {
       test('returns SearchResult with articles when status code is 200',
           () async {

@@ -50,15 +50,6 @@ void main() {
     ).thenAnswer(
       (_) async => const SearchResult(articles: [], totalResults: 0),
     );
-    when(
-      mockNewsArticleService.fetchArticlesBySource(
-        sourceId: anyNamed('sourceId'),
-        page: anyNamed('page'),
-        pageSize: anyNamed('pageSize'),
-      ),
-    ).thenAnswer(
-      (_) async => const SearchResult(articles: [], totalResults: 0),
-    );
 
     // Create a fresh scope for each test.
     scope = DashboardPageScope(
@@ -98,10 +89,11 @@ void main() {
     group('selectSource()', () {
       test('clears articles and refreshes with new source', () async {
         when(
-          mockNewsArticleService.fetchArticlesBySource(
-            sourceId: anyNamed('sourceId'),
+          mockNewsArticleService.searchArticles(
+            query: '',
             page: anyNamed('page'),
             pageSize: anyNamed('pageSize'),
+            sourceId: 'source1',
           ),
         ).thenAnswer((_) async => searchResultPage1);
 
@@ -146,18 +138,20 @@ void main() {
 
     test('resets pagination and loads articles', () async {
       when(
-        mockNewsArticleService.fetchArticlesBySource(
-          sourceId: anyNamed('sourceId'),
+        mockNewsArticleService.searchArticles(
+          query: '',
           page: 1,
           pageSize: anyNamed('pageSize'),
+          sourceId: 'source1',
         ),
       ).thenAnswer((_) async => searchResultPage1);
 
       when(
-        mockNewsArticleService.fetchArticlesBySource(
-          sourceId: anyNamed('sourceId'),
+        mockNewsArticleService.searchArticles(
+          query: '',
           page: 2,
           pageSize: anyNamed('pageSize'),
+          sourceId: 'source1',
         ),
       ).thenAnswer(
         (_) async => const SearchResult(articles: [], totalResults: 4),

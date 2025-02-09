@@ -110,41 +110,6 @@ class MockNewsArticleService extends _i1.Mock
           as _i4.Future<List<_i8.NewsSource>>);
 
   @override
-  _i4.Future<_i2.SearchResult> fetchArticlesBySource({
-    required String? sourceId,
-    int? pageSize,
-    int? page,
-  }) =>
-      (super.noSuchMethod(
-            Invocation.method(#fetchArticlesBySource, [], {
-              #sourceId: sourceId,
-              #pageSize: pageSize,
-              #page: page,
-            }),
-            returnValue: _i4.Future<_i2.SearchResult>.value(
-              _FakeSearchResult_0(
-                this,
-                Invocation.method(#fetchArticlesBySource, [], {
-                  #sourceId: sourceId,
-                  #pageSize: pageSize,
-                  #page: page,
-                }),
-              ),
-            ),
-            returnValueForMissingStub: _i4.Future<_i2.SearchResult>.value(
-              _FakeSearchResult_0(
-                this,
-                Invocation.method(#fetchArticlesBySource, [], {
-                  #sourceId: sourceId,
-                  #pageSize: pageSize,
-                  #page: page,
-                }),
-              ),
-            ),
-          )
-          as _i4.Future<_i2.SearchResult>);
-
-  @override
   _i4.Future<_i2.SearchResult> searchArticles({
     required String? query,
     String? searchIn,
