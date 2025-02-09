@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "819568218326",
+    "project_id": "simply-news-40c81",
+    "storage_bucket": "simply-news-40c81.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819568218326:android:8a72c2943fda3653fc3977",
+        "android_client_info": {
+          "package_name": "com.simplynews"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhCPCsZr8Vm9QuQH5TfQUADECRVU1ydXo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
