@@ -161,7 +161,7 @@ class _FavoriteArticlesPageState extends State<FavoriteArticlesPage>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('You have not added any favorite articles.'),
+                        const Text('You have not favorited any articles.'),
                         const SizedBox(height: 24),
                         Text(
                           'TAP THE HEART ICON ON AN ARTICLE TO ADD IT TO YOUR '

@@ -80,7 +80,7 @@ void main() {
       // Verify that the empty favorites state is displayed.
       expect(find.byKey(const Key('empty_favorites_state')), findsOneWidget);
       expect(
-        find.text('You have not added any favorite articles.'),
+        find.text('You have not favorited any articles.'),
         findsOneWidget,
       );
     },
