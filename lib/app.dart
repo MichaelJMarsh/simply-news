@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart' hide ThemeMode;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:data/data.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
@@ -17,22 +16,18 @@ class SimplyNewsApp extends StatefulWidget {
   const SimplyNewsApp({
     super.key,
     required this.database,
-    required this.getAppVersion,
     required this.share,
     required this.urlLauncher,
     required this.favoriteNewsArticleRepository,
-    required this.settingsRepository,
     required this.newsArticleService,
   });
 
   final Database database;
 
-  final GetAppVersion getAppVersion;
   final Share share;
   final UrlLauncher urlLauncher;
 
   final FavoriteNewsArticleRepository favoriteNewsArticleRepository;
-  final SettingsRepository settingsRepository;
 
   final NewsArticleService newsArticleService;
 
@@ -54,27 +49,14 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
     return MultiProvider(
       providers: [
         Provider.value(value: widget.database),
-        Provider.value(value: widget.getAppVersion),
         Provider.value(value: widget.share),
         Provider.value(value: widget.urlLauncher),
         Provider.value(value: widget.favoriteNewsArticleRepository),
-        Provider.value(value: widget.settingsRepository),
         Provider.value(value: widget.newsArticleService),
-        ChangeNotifierProvider(
-          lazy: false,
-          create: (_) => Settings(
-            widget.settingsRepository,
-          )..initialize(),
-        ),
       ],
       builder: (context, __) {
         final mediaQuery = MediaQuery.of(context);
-        final themeMode = Settings.select(
-          context,
-          (settings) => settings.themeMode,
-        );
         final theme = AppTheme.getTheme(
-          themeMode: themeMode,
           platformBrightness: mediaQuery.platformBrightness,
         );
 

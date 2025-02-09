@@ -2,7 +2,6 @@ import 'package:domain/domain.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 import 'sqflite_favorite_news_article_repository.dart';
-import 'sqflite_settings_repository.dart';
 
 /// The sqflite implementation of [Database].
 class SqfliteDatabase implements Database {
@@ -32,10 +31,6 @@ class SqfliteDatabase implements Database {
     return database.transaction((transaction) async {
       // Create database tables.
       await transaction.createFavoriteNewsArticleTable();
-      await transaction.createSettingsTable();
-
-      // Insert initial data.
-      await transaction.insertInitialSettingsData();
     });
   }
 
@@ -47,36 +42,13 @@ class SqfliteDatabase implements Database {
 
 /// Helper class for creating the database schema.
 extension _CreateDatabase on sql.Transaction {
-  /// Creates the database table for the action notes repository.
+  /// Creates the database table for the favorite news article repository.
   Future<void> createFavoriteNewsArticleTable() async {
     return execute('''
       CREATE TABLE ${SqfliteFavoriteNewsArticleRepository.tableName} (
         ${FavoriteNewsArticleField.article} TEXT NOT NULL PRIMARY KEY,
         ${FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch} INTEGER NOT NULL
       )
-    ''');
-  }
-
-  /// Creates the database table for the settings repository.
-  Future<void> createSettingsTable() async {
-    return execute('''
-      CREATE TABLE ${SqfliteSettingsRepository.tableName} (
-        ${SettingsField.nickname} TEXT NOT NULL,
-        ${SettingsField.themeModeName} TEXT NOT NULL
-      )
-    ''');
-  }
-}
-
-/// Helper class for inserting initial data into the database.
-extension _InsertInitialData on sql.Transaction {
-  /// Inserts initial [SettingsData] into the settings repository.
-  Future<void> insertInitialSettingsData() async {
-    return execute('''
-      INSERT INTO ${SqfliteSettingsRepository.tableName} (
-        ${SettingsField.nickname},
-        ${SettingsField.themeModeName}
-      ) VALUES ('', 'system');
     ''');
   }
 }

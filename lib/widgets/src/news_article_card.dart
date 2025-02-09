@@ -54,6 +54,7 @@ class NewsArticleCard extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
+                      key: const Key('news_article_card_title'),
                       article.title ?? '',
                       style: const TextStyle(
                         fontSize: 16,
@@ -73,10 +74,11 @@ class NewsArticleCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
+                    key: const Key('news_article_card_author'),
                     author,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey[700],
+                      color: colorScheme.onSurface.withValues(alpha: 0.64),
                     ),
                   ),
                 ),

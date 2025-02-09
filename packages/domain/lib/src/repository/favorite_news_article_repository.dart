@@ -10,14 +10,14 @@ abstract class FavoriteNewsArticleRepository {
   Stream<List<FavoriteNewsArticle>> get changes;
 
   /// Adds the given [favoriteNewsArticle] to the database.
-  Future<void> insert(FavoriteNewsArticle favoriteNewsArticle);
+  Future<void> insert(FavoriteNewsArticle? favoriteNewsArticle);
 
   /// Removes the givne [newsArticle] from the database.
-  Future<void> delete(NewsArticle newsArticle);
+  Future<void> delete(NewsArticle? newsArticle);
 
   /// Returns the corresponding [FavoriteNewsArticle] from the database, which
   /// matches the given [articleUrl].
-  Future<FavoriteNewsArticle?> get(String articleUrl);
+  Future<FavoriteNewsArticle?> get(String? articleUrl);
 
   /// Returns a list of all favorite news articles.
   Future<List<FavoriteNewsArticle>> list();
