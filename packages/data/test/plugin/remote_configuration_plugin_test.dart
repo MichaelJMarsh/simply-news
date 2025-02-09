@@ -19,27 +19,29 @@ void main() {
     plugin = RemoteConfigurationPlugin(remoteConfig: mockRemoteConfig);
   });
 
-  test('newsApiKey returns value from remote config', () {
-    final apiKey = plugin.newsApiKey;
+  group('RemoteConfigurationPlugin', () {
+    test('newsApiKey returns value from remote config', () {
+      final apiKey = plugin.newsApiKey;
 
-    verify(mockRemoteConfig.getString('news_api_key')).called(1);
-    expect(apiKey, equals('dummy_api_key'));
-  });
+      verify(mockRemoteConfig.getString('news_api_key')).called(1);
+      expect(apiKey, equals('dummy_api_key'));
+    });
 
-  test('initialize() calls setConfigSettings and fetchAndActivate', () async {
-    when(mockRemoteConfig.setConfigSettings(any)).thenAnswer((_) async {});
-    when(mockRemoteConfig.fetchAndActivate()).thenAnswer((_) async => true);
+    test('initialize() calls setConfigSettings and fetchAndActivate', () async {
+      when(mockRemoteConfig.setConfigSettings(any)).thenAnswer((_) async {});
+      when(mockRemoteConfig.fetchAndActivate()).thenAnswer((_) async => true);
 
-    await plugin.initialize();
+      await plugin.initialize();
 
-    final captured = verify(mockRemoteConfig.setConfigSettings(captureAny))
-        .captured
-        .single as RemoteConfigSettings;
+      final captured = verify(mockRemoteConfig.setConfigSettings(captureAny))
+          .captured
+          .single as RemoteConfigSettings;
 
-    // Verify that the settings were set correctly.
-    expect(captured.fetchTimeout, equals(const Duration(seconds: 10)));
-    expect(captured.minimumFetchInterval, equals(const Duration(hours: 1)));
+      // Verify that the settings were set correctly.
+      expect(captured.fetchTimeout, equals(const Duration(seconds: 10)));
+      expect(captured.minimumFetchInterval, equals(const Duration(hours: 1)));
 
-    verify(mockRemoteConfig.fetchAndActivate()).called(1);
+      verify(mockRemoteConfig.fetchAndActivate()).called(1);
+    });
   });
 }
