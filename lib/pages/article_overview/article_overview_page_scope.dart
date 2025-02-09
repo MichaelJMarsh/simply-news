@@ -39,10 +39,15 @@ class ArticleOverviewPageScope extends ChangeNotifier {
   String get author => _article.author ?? '';
 
   /// The length at which the News API truncates the content of the news article.
-  static const _contentLength = 200;
+  static const _maxContentLength = 200;
 
   /// The content of the news article.
-  String get content => _article.content?.substring(0, _contentLength) ?? '';
+  String get content {
+    final contentString = _article.content ?? '';
+    if (_maxContentLength > contentString.length) return contentString;
+
+    return contentString.substring(0, _maxContentLength);
+  }
 
   /// Returns the [FavoriteNewsArticle], if the user has added the current
   /// news article to their favorites.

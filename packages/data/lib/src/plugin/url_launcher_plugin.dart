@@ -2,15 +2,28 @@ import 'package:domain/domain.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UrlLauncherPlugin implements UrlLauncher {
-  const UrlLauncherPlugin();
+  /// Creates a new [UrlLauncherPlugin].
+  const UrlLauncherPlugin({required UrlLauncherDelegate delegate})
+      : _delegate = delegate;
+
+  final UrlLauncherDelegate _delegate;
 
   @override
   Future<bool> launch(String urlString) {
-    return launchUrl(Uri.parse(urlString));
+    return _delegate.launch(Uri.parse(urlString));
   }
 
   @override
   Future<bool> canLaunch(String urlString) {
-    return canLaunchUrl(Uri.parse(urlString));
+    return _delegate.canLaunch(Uri.parse(urlString));
   }
+}
+
+/// A delegate that wraps `url_launcher` for better testability.
+class UrlLauncherDelegate {
+  /// Launches a URL using `url_launcher`.
+  Future<bool> launch(Uri uri) => launchUrl(uri);
+
+  /// Checks if a URL can be launched.
+  Future<bool> canLaunch(Uri uri) => canLaunchUrl(uri);
 }

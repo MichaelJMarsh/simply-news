@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' hide ThemeMode;
-
-import 'package:domain/domain.dart';
+import 'package:flutter/material.dart';
 
 import 'package:simply_news/widgets/widgets.dart';
 
@@ -68,7 +66,6 @@ class _RunnerState extends State<Runner> {
 
     return Theme(
       data: AppTheme.getTheme(
-        themeMode: ThemeMode.system,
         platformBrightness: mediaQuery.platformBrightness,
       ),
       child: Builder(

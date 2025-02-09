@@ -24,7 +24,9 @@ class SqfliteFavoriteNewsArticleRepository
   List<FavoriteNewsArticle> _favoriteNewsArticles = [];
 
   @override
-  Future<void> insert(FavoriteNewsArticle favoriteNewsArticle) async {
+  Future<void> insert(FavoriteNewsArticle? favoriteNewsArticle) async {
+    if (favoriteNewsArticle == null) return;
+
     await _database.insert(
       tableName,
       {
@@ -43,7 +45,9 @@ class SqfliteFavoriteNewsArticleRepository
   }
 
   @override
-  Future<void> delete(NewsArticle newsArticle) async {
+  Future<void> delete(NewsArticle? newsArticle) async {
+    if (newsArticle == null) return;
+
     await _database.delete(
       tableName,
       where: '${FavoriteNewsArticleField.article} LIKE ?',
@@ -59,7 +63,9 @@ class SqfliteFavoriteNewsArticleRepository
   }
 
   @override
-  Future<FavoriteNewsArticle?> get(String articleUrl) async {
+  Future<FavoriteNewsArticle?> get(String? articleUrl) async {
+    if (articleUrl == null) return null;
+
     final results = await _database.query(
       tableName,
       where: '${FavoriteNewsArticleField.article} LIKE ?',

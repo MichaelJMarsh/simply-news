@@ -6,17 +6,23 @@ import 'package:http/http.dart' as http;
 const _defaultPage = 1;
 const _defaultPageSize = 10;
 
-class NewsArticlePlugin implements NewsArticleService {
-  /// Creates a new instance of [NewsArticlePlugin].
-  const NewsArticlePlugin({required String apiKey}) : _apiKey = apiKey;
+class NewsArticleClient implements NewsArticleService {
+  /// Creates a new instance of [NewsArticleClient].
+  NewsArticleClient({
+    required String apiKey,
+    http.Client? client,
+  })  : _apiKey = apiKey,
+        _client = client ?? http.Client();
 
   final String _apiKey;
+  final http.Client _client;
+
   static const _baseUrl = 'newsapi.org';
 
   @override
   Future<List<NewsSource>> fetchSources() async {
     final uri = Uri.https(_baseUrl, '/v2/sources', {'apiKey': _apiKey});
-    final response = await http.get(uri);
+    final response = await _client.get(uri);
     if (response.statusCode != 200) {
       throw Exception(
         'Failed to fetch sources (status: ${response.statusCode})',
@@ -46,7 +52,7 @@ class NewsArticlePlugin implements NewsArticleService {
     };
 
     final uri = Uri.https(_baseUrl, '/v2/top-headlines', queryParameters);
-    final response = await http.get(uri);
+    final response = await _client.get(uri);
 
     if (response.statusCode != 200) {
       throw Exception('Failed to fetch articles by source '
@@ -96,7 +102,7 @@ class NewsArticlePlugin implements NewsArticleService {
     }
 
     final uri = Uri.https(_baseUrl, '/v2/everything', queryParameters);
-    final response = await http.get(uri);
+    final response = await _client.get(uri);
 
     if (response.statusCode != 200) {
       throw Exception(
