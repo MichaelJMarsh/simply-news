@@ -4,7 +4,12 @@ import 'package:domain/domain.dart';
 import 'package:share_plus/share_plus.dart' as package;
 
 class SharePlugin implements Share {
-  const SharePlugin();
+  /// Creates a new [SharePlugin].
+  const SharePlugin({
+    required ShareDelegate delegate,
+  }) : _delegate = delegate;
+
+  final ShareDelegate _delegate;
 
   /// Summons the platform's share sheet to send text.
   ///
@@ -30,7 +35,7 @@ class SharePlugin implements Share {
       defaultContentFormat = '$message\n\n$content';
     }
 
-    final result = await package.Share.share(
+    final result = await _delegate.share(
       defaultContentFormat,
       subject: subject,
       sharePositionOrigin: sharePositionOrigin,
@@ -41,5 +46,21 @@ class SharePlugin implements Share {
     }
 
     return false;
+  }
+}
+
+/// A delegate for the platform's share sheet.
+class ShareDelegate {
+  /// Summons the platform's share sheet to send text.
+  Future<package.ShareResult> share(
+    String text, {
+    String? subject,
+    Rect? sharePositionOrigin,
+  }) {
+    return package.Share.share(
+      text,
+      subject: subject,
+      sharePositionOrigin: sharePositionOrigin,
+    );
   }
 }
