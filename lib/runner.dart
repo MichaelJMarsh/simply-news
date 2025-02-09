@@ -7,13 +7,13 @@ import 'app_theme.dart';
 import 'app.dart';
 import 'bootstrap.dart';
 
-/// The widget which attempts to run the [CannaBookApp].
+/// The widget which attempts to run the [SimplyNewsApp].
 ///
-/// If the [CannaBookApp] is still initializing, a splash screen is displayed.
+/// If the [SimplyNewsApp] is still initializing, a splash screen is displayed.
 ///
-/// If the [CannaBookApp] fails to initialize, an error screen is displayed.
+/// If the [SimplyNewsApp] fails to initialize, an error screen is displayed.
 ///
-/// The [CannaBookApp] is displayed once it has been successfully initialized.
+/// The [SimplyNewsApp] is displayed once it has been successfully initialized.
 class Runner extends StatefulWidget {
   /// Creates a new [Runner].
   const Runner({super.key});
@@ -33,7 +33,7 @@ class _RunnerState extends State<Runner> {
     _initializeApp();
   }
 
-  /// Attempts to initialize the [CannaBookApp], then updates the state.
+  /// Attempts to initialize the [SimplyNewsApp], then updates the state.
   Future<void> _initializeApp() async {
     try {
       final app = await bootstrap();
