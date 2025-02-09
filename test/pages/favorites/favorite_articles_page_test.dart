@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:domain/domain.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import 'package:domain/domain.dart';
 import 'package:simply_news/pages/article_overview/article_overview_page.dart';
 import 'package:simply_news/pages/favorites/favorite_articles_page.dart';
 import 'package:simply_news/widgets/widgets.dart';
