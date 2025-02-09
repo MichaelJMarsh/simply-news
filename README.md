@@ -15,72 +15,84 @@ A **Flutter** app that fetches headlines from [NewsAPI.org](https://newsapi.org)
 
 ## Project Structure
 
+```plaintext
 lib/
-├── main.dart # App entry point
-├── data/ # Data sources, models, API clients
-├── ui/ # Presentation layer (Widgets, Screens)
-├── services/ # Background tasks, refresh logic
-└── utils/ # Helper methods, constants
-test/ # Unit tests
-pubspec.yaml # Dependency configuration
+├── main.dart       # App entry point
+├── data/          # Data sources, models, API clients
+├── ui/            # Presentation layer (Widgets, Screens)
+├── services/      # Background tasks, refresh logic
+└── utils/         # Helper methods, constants
+test/              # Unit tests
+pubspec.yaml       # Dependency configuration
+```
 
----
+Prerequisites
+• Flutter SDK (2.0+)
+• Dart (included with Flutter)
+• Android Studio or Xcode (for emulators/simulators)
+• NewsAPI.org API key (store securely in real-world scenarios)
 
-## Prerequisites
+    Note: Make sure to secure API keys (e.g., via .env or other methods) if deploying to production.
 
-- **Flutter SDK** (2.0+)
-- **Dart** (included with Flutter)
-- **Android Studio** or **Xcode** (for emulators/simulators)
-- **NewsAPI.org** API key (store securely in real-world scenarios)
+Setup & Installation 1. Clone or Download this repository:
 
-> **Note**: Make sure to secure API keys (e.g., via `.env` or other methods) if deploying to production.
+git clone https://github.com/YourUser/SimplyNews.git
+cd SimplyNews
 
----
+    2.	Install Dependencies:
 
-## Setup & Installation
-
-1. **Clone or Download** this repository:
-
-   ```bash
-   git clone https://github.com/YourUser/SimplyNews.git
-   cd SimplyNews
-
-   2.	Install Dependencies:
-   ```
-
+```bash
 flutter pub get
+```
 
     3.	Run the App:
     •	Android
-    •	Launch an emulator (AVD Manager in Android Studio)
+    •	Launch an emulator (using AVD Manager in Android Studio)
     •	Run:
 
+```bash
 flutter run
+```
 
     •	If multiple devices/emulators are connected, specify a device:
 
+```bash
 flutter run -d emulator-5554
+```
 
     •	iOS
     •	Launch the iOS Simulator (via Xcode or CLI):
 
+```bash
 open -a Simulator
+```
 
     •	Run:
 
+```bash
 flutter run
+```
 
     •	To specify a device:
 
+```bash
 flutter run -d iPhone-13
+```
 
-Usage 1. Launch the app to view the latest articles. 2. Tap an article to read a text-focused view. 3. Save (favorite) the article locally with the “Save” icon. 4. Refresh is automatic via a background service or can be triggered manually (if pull-to-refresh is implemented).
+Usage 1. Launch the app to view the latest articles. 2. Tap an article to read a text-focused view. 3. Save (favorite) the article locally by tapping the Save floating action
+button or favorite icon button. 4. Enjoy automatic refresh via the background service, or manually trigger a refresh (if pull-to-refresh is implemented).
 
 Testing
-• Unit Tests are located in test/.
+• Unit tests are located in the test/ directory.
 • Run tests with:
 
+```bash
 flutter test
+```
 
 Thank you for exploring Simply News!
 Feel free to reach out with any questions or suggestions.
+
+```
+
+```
