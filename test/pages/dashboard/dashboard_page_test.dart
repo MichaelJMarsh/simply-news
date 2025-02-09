@@ -63,14 +63,6 @@ void main() {
         sourceId: anyNamed('sourceId'),
       ),
     ).thenAnswer((_) async => searchResult);
-
-    when(
-      mockNewsArticleService.fetchArticlesBySource(
-        sourceId: anyNamed('sourceId'),
-        page: anyNamed('page'),
-        pageSize: anyNamed('pageSize'),
-      ),
-    ).thenAnswer((_) async => searchResult);
   });
 
   tearDown(() {

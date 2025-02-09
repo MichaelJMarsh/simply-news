@@ -10,7 +10,8 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 import 'app.dart';
 import 'firebase_options.dart';
 
-/// Initializes the database and other services, then returns the created [SimplyNewsApp].
+/// Initializes the database and other services, then returns the
+/// created [SimplyNewsApp].
 Future<SimplyNewsApp> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

@@ -9,8 +9,7 @@ import 'pages/dashboard/dashboard_page.dart';
 
 /// Manages the core functionalities of SimplyNews.
 ///
-/// Leverages a variety of services and repositories to manage user data,
-/// preferences and system interactions.
+/// Leverages the injected dependencies to provide the necessary services.
 class SimplyNewsApp extends StatefulWidget {
   /// Creates a new [SimplyNewsApp].
   const SimplyNewsApp({

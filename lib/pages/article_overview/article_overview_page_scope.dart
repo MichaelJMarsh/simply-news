@@ -6,6 +6,8 @@ import 'package:clock/clock.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
+/// A provider-scoped state management class that tracks and toggles a news
+/// article’s favorite status, while managing article content truncation.
 class ArticleOverviewPageScope extends ChangeNotifier {
   /// Creates a new [ArticleOverviewPageScope].
   ArticleOverviewPageScope({

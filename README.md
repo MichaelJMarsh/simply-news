@@ -1,15 +1,16 @@
 # Simply News
 
-A **Flutter** app that fetches headlines from [NewsAPI.org](https://newsapi.org) and displays them in a clean, text-focused interface. Built as part of a Headspace Mobile Engineering sample assignment.
+A **Flutter** app that fetches articles from [NewsAPI.org](https://newsapi.org) and displays them in a clean, text-focused interface. Built as part of a Headspace Mobile Engineering sample assignment.
 
 ---
 
 ## Features
 
 1. **Text-Only News** – Minimalist news reading experience.
-2. **Save / Favorite Articles** – Local storage (e.g., SQLite) for saved headlines.
-3. **Auto-Refresh** – Background service to keep news up-to-date.
-4. **Testing** – Basic coverage for core business logic and widgets.
+2. **Save / Favorite Articles** – Local storage (e.g., SQLite) for saved news articles.
+3. **Pagination** - Seamless scrolling to load more articles as you browse.
+4. **News Refresh** – Instantly fetch the latest headlines by pulling down to refresh.
+5. **Testing** – Coverage for core business logic and widgets.
 
 ---
 
@@ -32,8 +33,10 @@ lib/                  # Main source code
 ├── runner.dart       # App bootstrapper
 packages/             # Internal modular packages
 ├── data/             # Data sources (API clients, local storage, plugins)
+    ├── test/         # Unit and widgets tests for the data directory
 ├── domain/           # Business logic, models, repositories, services
-test/                 # Unit and widget tests
+    ├── test/         # Unit and widget tests for the domain directory
+test/                 # Unit and widget tests for the lib directory
 pubspec.yaml          # Dependency configuration
 README.md             # Documentation
 ```
@@ -115,8 +118,8 @@ flutter run -d iPhone-13
 2. **Tap an article** to read a **text-focused** view.
 3. **Save (favorite) an article** locally by tapping the **"ADD TO FAVORITES"** floating action button or **favorite icon**.
 4. **Access saved articles** anytime by navigating to the **Favorites Page**.
-5. **Scroll down on the dashboard** to load more articles via **paginated scrolling** (new articles load until no more are available).
-6. **Enjoy automatic refresh** via the background service, or manually trigger a refresh by pulling down from the top of the dashboard.
+5. **Scroll down on the dashboard** to load more articles via **paginated scrolling** (new articles load until no more are available), ensuring a smooth and **performant** browsing experience.
+6. **Stay updated** by manually pulling down from the top of the dashboard to fetch the latest news at your convenience!
 
 ---
 
