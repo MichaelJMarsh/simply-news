@@ -8,15 +8,6 @@ abstract class NewsArticleService {
   /// Returns a list of all available news sources.
   Future<List<NewsSource>> fetchSources();
 
-  /// Returns a [SearchResult] (articles + total count) from the given [sourceId].
-  ///
-  /// If [sourceId] is null/empty, fetch from all sources.
-  Future<SearchResult> fetchArticlesBySource({
-    required String sourceId,
-    int pageSize,
-    int page,
-  });
-
   /// Returns a [SearchResult] (articles + total count) from the given [query].
   ///
   /// The [searchIn] parameter specifies the fields to search in.
