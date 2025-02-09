@@ -1,4 +1,4 @@
-package com.simply_news
+package com.simplynews
 
 import io.flutter.embedding.android.FlutterActivity
 
