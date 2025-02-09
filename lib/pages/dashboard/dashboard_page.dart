@@ -9,18 +9,30 @@ import 'package:simply_news/pages/article_overview/article_overview_page.dart';
 import 'package:simply_news/widgets/widgets.dart';
 
 import 'dashboard_page_scope.dart';
+import 'widgets/loading_layout.dart';
 import 'widgets/news_article_tile.dart';
 
-class DashboardPage extends StatefulWidget {
-  /// Creates a new [DashboardPage].
+class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => DashboardPageScope.of(context)..initialize(),
+      child: const _Layout(),
+    );
+  }
 }
 
-class _DashboardPageState extends State<DashboardPage>
-    with SingleTickerProviderStateMixin {
+class _Layout extends StatefulWidget {
+  /// Creates a new [_Layout].
+  const _Layout();
+
+  @override
+  State<_Layout> createState() => _LayoutState();
+}
+
+class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
   /// The controller which manages the enter animations.
   late final AnimationController _enterAnimationsController;
 
@@ -29,6 +41,9 @@ class _DashboardPageState extends State<DashboardPage>
 
   /// Timer to start the enter animation.
   late final Timer _enterAnimationsStartTimer;
+
+  /// Scroll controller used for pagination.
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -45,6 +60,9 @@ class _DashboardPageState extends State<DashboardPage>
       const Duration(milliseconds: 200),
       _enterAnimationsController.forward,
     );
+
+    // Listen for scroll events to trigger loading more articles.
+    _scrollController.addListener(_onScroll);
   }
 
   @override
@@ -52,7 +70,23 @@ class _DashboardPageState extends State<DashboardPage>
     _enterAnimationsStartTimer.cancel();
     _enterAnimationsController.dispose();
 
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+
     super.dispose();
+  }
+
+  /// Attempts to load more articles, if the user scrolls close to the bottom.
+  Future<void> _onScroll() async {
+    const pixelThreshold = 200.0;
+    final hasReachBottom = _scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - pixelThreshold;
+
+    final dashboardScope = context.read<DashboardPageScope>();
+
+    if (!hasReachBottom || dashboardScope.isLoadingMore) return;
+
+    await dashboardScope.loadMoreArticles();
   }
 
   /// Opens the article overview page for the given [articleId].
@@ -71,6 +105,9 @@ class _DashboardPageState extends State<DashboardPage>
   @override
   Widget build(BuildContext context) {
     final bottomPadding = 32 + MediaQuery.paddingOf(context).bottom;
+
+    final dashboard = context.watch<DashboardPageScope>();
+    final isLoading = dashboard.isLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -93,80 +130,89 @@ class _DashboardPageState extends State<DashboardPage>
           ),
         ],
       ),
-      body: ChangeNotifierProvider(
-        create: (context) => DashboardPageScope.of(context)..initialize(),
-        builder: (context, _) {
-          final dashboard = context.watch<DashboardPageScope>();
-          final isLoading = dashboard.isLoading;
-
-          return AnimatedSwitcher(
-            switchInCurve: Curves.easeIn,
-            switchOutCurve: Curves.easeOut,
-            duration: const Duration(milliseconds: 450),
-            child: isLoading
-                ? AnimatedTranslation.vertical(
-                    animation: _enterAnimations.loadingIndicator,
-                    pixels: 32,
-                    child: Center(
-                      key: Key(
-                        'loading_indicator.${isLoading ? 'visible' : 'hidden'}',
+      body: AnimatedSwitcher(
+        switchInCurve: Curves.easeIn,
+        switchOutCurve: Curves.easeOut,
+        duration: const Duration(milliseconds: 450),
+        child: isLoading
+            ? AnimatedTranslation.vertical(
+                key: Key(
+                  'loading_indicator.${isLoading ? 'visible' : 'hidden'}',
+                ),
+                animation: _enterAnimations.loadingIndicator,
+                pixels: 32,
+                child: const Center(
+                  child: LoadingLayout(
+                    message: Text('Loading news articles...'),
+                  ),
+                ),
+              )
+            : RefreshIndicator(
+                onRefresh: dashboard.refreshArticles,
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
                       ),
-                      child: const Text('Loading news articles...'),
-                    ),
-                  )
-                : CustomScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    slivers: [
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
+                      sliver: SliverToBoxAdapter(
+                        child: AnimatedTranslation.vertical(
+                          animation: _enterAnimations.searchBar,
+                          pixels: 32,
+                          child: SearchBar(
+                            key: const Key('search_bar'),
+                            hintText: 'Search for news articles...',
+                            onChanged: dashboard.searchNewsArticles,
+                            onSubmitted: dashboard.searchNewsArticles,
+                          ),
                         ),
-                        sliver: SliverToBoxAdapter(
-                          child: AnimatedTranslation.vertical(
-                            animation: _enterAnimations.searchBar,
+                      ),
+                    ),
+                    SliverPadding(
+                      padding: EdgeInsets.only(
+                        bottom: bottomPadding,
+                      ),
+                      sliver: SliverList.separated(
+                        itemCount: dashboard.newsArticles.length,
+                        separatorBuilder: (_, __) => const Divider(),
+                        itemBuilder: (context, index) {
+                          final newsArticle = dashboard.newsArticles[index];
+
+                          return AnimatedTranslation.vertical(
+                            animation: _enterAnimations.newsArticles,
                             pixels: 32,
-                            child: SearchBar(
-                              key: const Key('search_bar'),
-                              hintText: 'Search for news articles...',
-                              onChanged: dashboard.searchNewsArticles,
-                              onSubmitted: dashboard.searchNewsArticles,
+                            child: NewsArticleTile(
+                              article: newsArticle,
+                              isFavorite: dashboard.isFavorite(newsArticle.url),
+                              onFavorite: () =>
+                                  dashboard.toggleFavorite(newsArticle),
+                              onPressed: () => _openArticleOverview(
+                                context,
+                                article: newsArticle,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    if (dashboard.isLoadingMore)
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              strokeCap: StrokeCap.round,
+                              strokeWidth: 8,
                             ),
                           ),
                         ),
                       ),
-                      SliverPadding(
-                        padding: EdgeInsets.only(
-                          bottom: bottomPadding,
-                        ),
-                        sliver: SliverList.separated(
-                          itemCount: dashboard.newsArticles.length,
-                          separatorBuilder: (_, __) => const Divider(),
-                          itemBuilder: (context, index) {
-                            final newsArticle = dashboard.newsArticles[index];
-
-                            return AnimatedTranslation.vertical(
-                              animation: _enterAnimations.newsArticles,
-                              pixels: 32,
-                              child: NewsArticleTile(
-                                article: newsArticle,
-                                isFavorite:
-                                    dashboard.isFavorite(newsArticle.url),
-                                onFavorite: () =>
-                                    dashboard.toggleFavorite(newsArticle),
-                                onPressed: () => _openArticleOverview(
-                                  context,
-                                  article: newsArticle,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-          );
-        },
+                  ],
+                ),
+              ),
       ),
     );
   }

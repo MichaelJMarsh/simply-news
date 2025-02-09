@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class NewsApiPlugin implements NewsArticleService {
   // Ideally you’d load this securely, e.g. from .env or Firebase Remote Config
-  static const _apiKey = '0f342d6f6e5b43ddae29a80e1e039131';
+  static const _apiKey = '19ff8c29e1b344588fb099b805f6005c';
   static const _baseUrl = 'newsapi.org';
 
   @override
