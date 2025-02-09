@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// An animated favorite button that toggles between filled and outlined
+/// heart icons when pressed.
 class FavoriteIconButton extends StatelessWidget {
   /// Creates a new [FavoriteIconButton].
   const FavoriteIconButton({

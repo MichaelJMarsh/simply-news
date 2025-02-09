@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-/// A widget that animates a counter from 0 to a given value.
+/// A widget that animates an integer from 0 to a given value.
 class AnimatedCounter extends StatelessWidget {
   /// Creates a new [AnimatedCounter].
   const AnimatedCounter(

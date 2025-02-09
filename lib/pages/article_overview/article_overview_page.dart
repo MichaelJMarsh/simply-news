@@ -9,6 +9,8 @@ import 'package:simply_news/widgets/widgets.dart';
 
 import 'article_overview_page_scope.dart';
 
+/// A detailed news article page, allowing users to read, share, and favorite
+/// the currently displayed news article.
 class ArticleOverviewPage extends StatefulWidget {
   /// Creates a new [ArticleOverviewPage].
   const ArticleOverviewPage({

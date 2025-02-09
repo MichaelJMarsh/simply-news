@@ -10,6 +10,8 @@ import 'package:simply_news/widgets/widgets.dart';
 
 import 'favorite_articles_page_scope.dart';
 
+/// A page that displays a user’s saved favorite news articles, allowing users
+/// to view and / or remove favorites.
 class FavoriteArticlesPage extends StatefulWidget {
   /// Creates a new [FavoriteArticlesPage].
   const FavoriteArticlesPage({super.key});

@@ -4,6 +4,10 @@ import 'package:domain/domain.dart';
 
 import 'favorite_icon_button.dart';
 
+/// A tappable card displaying a news article’s title, author, and favorite
+/// status.
+///
+/// Users can toggle the favorite status by tapping the trailing favorite icon.
 class NewsArticleCard extends StatelessWidget {
   /// Creates a new [NewsArticleCard].
   const NewsArticleCard({
