@@ -26,11 +26,14 @@ test/              # Unit tests
 pubspec.yaml       # Dependency configuration
 ```
 
-Prerequisites
-• Flutter SDK (2.0+)
-• Dart (included with Flutter)
-• Android Studio or Xcode (for emulators/simulators)
-• NewsAPI.org API key (store securely in real-world scenarios)
+---
+
+## Prerequisites
+
+    •	Flutter SDK (2.0+)
+    •	Dart (included with Flutter)
+    •	Android Studio or Xcode (for emulators/simulators)
+    •	NewsAPI.org API key (store securely in real-world scenarios)
 
     Note: Make sure to secure API keys (e.g., via .env or other methods) if deploying to production.
 
@@ -60,26 +63,26 @@ flutter pub get
 flutter run
 ```
 
-• If multiple devices/emulators are connected, specify a device:
+    •	If multiple devices/emulators are connected, specify a device:
 
 ```bash
 flutter run -d emulator-5554
 ```
 
-• iOS
-• Launch the iOS Simulator (via Xcode or CLI):
+    •	iOS
+    •	Launch the iOS Simulator (via Xcode or CLI):
 
 ```bash
 open -a Simulator
 ```
 
-• Run:
+    •	Run:
 
 ```bash
 flutter run
 ```
 
-• To specify a device:
+    •	To specify a device:
 
 ```bash
 flutter run -d iPhone-13
@@ -91,15 +94,15 @@ flutter run -d iPhone-13
 
 1. Launch the app to view the latest articles.
 2. Tap an article to read a text-focused view.
-3. Save (favorite) the article locally by tapping the Save icon.
+3. Save (favorite) the article locally by tapping the Save floating action button or favorite icon button.
 4. Enjoy automatic refresh via the background service, or manually trigger a refresh (if pull-to-refresh is implemented).
 
 ---
 
 ## Testing
 
-• Unit tests are located in the test/ directory.
-• Run tests with:
+    •	Unit tests are located in the `test/` directory.
+    •	Run tests with:
 
 ```bash
 flutter test
