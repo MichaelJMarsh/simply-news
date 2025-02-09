@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart' hide ThemeMode;
-
-import 'package:domain/domain.dart';
+import 'package:flutter/material.dart';
 
 /// Defines the SimplyNews app themes.
 class AppTheme {
@@ -30,14 +28,8 @@ class AppTheme {
 
   /// Determines the correct theme based on user settings and system brightness.
   static ThemeData getTheme({
-    required ThemeMode themeMode,
     required Brightness platformBrightness,
   }) {
-    return switch (themeMode) {
-      ThemeMode.light => lightTheme,
-      ThemeMode.dark => darkTheme,
-      ThemeMode.system =>
-        platformBrightness == Brightness.light ? lightTheme : darkTheme,
-    };
+    return platformBrightness == Brightness.light ? lightTheme : darkTheme;
   }
 }

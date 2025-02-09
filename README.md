@@ -122,11 +122,12 @@ flutter run -d iPhone-13
 
 ## Testing
 
-- Unit tests are located in the `test/` directory.
+- Tests are located in the `test/`, `packages/data/test/` and `packages/domain/test/` directories.
+- I have created a convenient `run_all_tests.dart` script to allow for all tests to be run from a single command.
 - Run tests with:
 
 ```bash
-flutter test
+dart run_all_tests.dart
 ```
 
 Thank you for taking the time to explore Simply News!
