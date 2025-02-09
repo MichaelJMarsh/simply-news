@@ -34,55 +34,70 @@ Prerequisites
 
     Note: Make sure to secure API keys (e.g., via .env or other methods) if deploying to production.
 
-Setup & Installation 1. Clone or Download this repository:
+---
 
-git clone https://github.com/YourUser/SimplyNews.git
-cd SimplyNews
+## Setup & Installation
 
-    2.	Install Dependencies:
+1. Clone or Download this repository:
+
+```bash
+git clone https://github.com/MichaelJMarsh/simply-news.git
+cd simply_news
+```
+
+2. Install Dependencies:
 
 ```bash
 flutter pub get
 ```
 
-    3.	Run the App:
-    •	Android
-    •	Launch an emulator (using AVD Manager in Android Studio)
-    •	Run:
+3. Run the App:
+   • Android
+   • Launch an emulator (using AVD Manager in Android Studio)
+   • Run:
 
 ```bash
 flutter run
 ```
 
-    •	If multiple devices/emulators are connected, specify a device:
+• If multiple devices/emulators are connected, specify a device:
 
 ```bash
 flutter run -d emulator-5554
 ```
 
-    •	iOS
-    •	Launch the iOS Simulator (via Xcode or CLI):
+• iOS
+• Launch the iOS Simulator (via Xcode or CLI):
 
 ```bash
 open -a Simulator
 ```
 
-    •	Run:
+• Run:
 
 ```bash
 flutter run
 ```
 
-    •	To specify a device:
+• To specify a device:
 
 ```bash
 flutter run -d iPhone-13
 ```
 
-Usage 1. Launch the app to view the latest articles. 2. Tap an article to read a text-focused view. 3. Save (favorite) the article locally by tapping the Save floating action
-button or favorite icon button. 4. Enjoy automatic refresh via the background service, or manually trigger a refresh (if pull-to-refresh is implemented).
+---
 
-Testing
+## Usage
+
+1. Launch the app to view the latest articles.
+2. Tap an article to read a text-focused view.
+3. Save (favorite) the article locally by tapping the Save icon.
+4. Enjoy automatic refresh via the background service, or manually trigger a refresh (if pull-to-refresh is implemented).
+
+---
+
+## Testing
+
 • Unit tests are located in the test/ directory.
 • Run tests with:
 
