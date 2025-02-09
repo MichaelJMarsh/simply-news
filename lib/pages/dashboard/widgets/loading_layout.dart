@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:simply_news/widgets/widgets.dart';
+
 class LoadingLayout extends StatelessWidget {
   /// Creates a new [LoadingLayout].
   const LoadingLayout({
@@ -19,10 +21,7 @@ class LoadingLayout extends StatelessWidget {
       children: [
         Center(child: message),
         const SizedBox(height: 24),
-        const CircularProgressIndicator(
-          strokeCap: StrokeCap.round,
-          strokeWidth: 8,
-        ),
+        const LoadingIndicator(),
       ],
     );
   }

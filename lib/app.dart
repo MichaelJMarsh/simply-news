@@ -5,6 +5,7 @@ import 'package:data/data.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
+import 'app_theme.dart';
 import 'pages/dashboard/dashboard_page.dart';
 
 /// Manages the core functionalities of SimplyNews.
@@ -72,15 +73,9 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
           context,
           (settings) => settings.themeMode,
         );
-        var theme = _AppTheme.getTheme(
+        final theme = AppTheme.getTheme(
           themeMode: themeMode,
           platformBrightness: mediaQuery.platformBrightness,
-        );
-
-        theme = theme.copyWith(
-          colorScheme: theme.colorScheme.copyWith(
-            primary: const Color(0xFF1E3A8A),
-          ),
         );
 
         return MediaQuery(
@@ -107,45 +102,5 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
         );
       },
     );
-  }
-}
-
-/// Defines the SimplyNews app themes.
-class _AppTheme {
-  const _AppTheme._();
-
-  static const primaryColor = Color(0xFF1E3A8A);
-
-  /// Light theme configuration.
-  static final lightTheme = ThemeData(
-    brightness: Brightness.light,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryColor,
-      brightness: Brightness.light,
-    ),
-    useMaterial3: true,
-  );
-
-  /// Dark theme configuration.
-  static final darkTheme = ThemeData(
-    brightness: Brightness.dark,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryColor,
-      brightness: Brightness.dark,
-    ),
-    useMaterial3: true,
-  );
-
-  /// Determines the correct theme based on user settings and system brightness.
-  static ThemeData getTheme({
-    required ThemeMode themeMode,
-    required Brightness platformBrightness,
-  }) {
-    return switch (themeMode) {
-      ThemeMode.light => lightTheme,
-      ThemeMode.dark => darkTheme,
-      ThemeMode.system =>
-        platformBrightness == Brightness.light ? lightTheme : darkTheme,
-    };
   }
 }

@@ -203,10 +203,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 16),
                           child: Center(
-                            child: CircularProgressIndicator(
-                              strokeCap: StrokeCap.round,
-                              strokeWidth: 8,
-                            ),
+                            child: LoadingIndicator(),
                           ),
                         ),
                       ),
