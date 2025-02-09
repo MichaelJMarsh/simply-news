@@ -3,9 +3,13 @@ import 'dart:convert';
 import 'package:domain/domain.dart';
 import 'package:http/http.dart' as http;
 
-class NewsApiPlugin implements NewsArticleService {
-  // Ideally you’d load this securely, e.g. from .env or Firebase Remote Config
-  static const _apiKey = '19ff8c29e1b344588fb099b805f6005c';
+class NewsArticlePlugin implements NewsArticleService {
+  /// Creates a new [NewsArticlePlugin].
+  const NewsArticlePlugin({required String apiKey}) : _apiKey = apiKey;
+
+  /// The API key to use for requests.
+  final String _apiKey;
+
   static const _baseUrl = 'newsapi.org';
 
   @override
