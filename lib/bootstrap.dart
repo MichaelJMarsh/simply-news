@@ -1,10 +1,9 @@
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:data/data.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
@@ -29,7 +28,6 @@ Future<SimplyNewsApp> bootstrap() async {
 
   return SimplyNewsApp(
     database: database,
-    getAppVersion: _getAppVersion,
     share: const SharePlugin(),
     urlLauncher: const UrlLauncherPlugin(),
     favoriteNewsArticleRepository:
@@ -47,10 +45,4 @@ Future<String> _getDatabasePath() async {
   final path = await sqflite.getDatabasesPath();
 
   return join(path, databaseFilename);
-}
-
-Future<String> _getAppVersion() async {
-  final packageInfo = await PackageInfo.fromPlatform();
-
-  return packageInfo.version;
 }

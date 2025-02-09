@@ -17,7 +17,6 @@ class SimplyNewsApp extends StatefulWidget {
   const SimplyNewsApp({
     super.key,
     required this.database,
-    required this.getAppVersion,
     required this.share,
     required this.urlLauncher,
     required this.favoriteNewsArticleRepository,
@@ -27,7 +26,6 @@ class SimplyNewsApp extends StatefulWidget {
 
   final Database database;
 
-  final GetAppVersion getAppVersion;
   final Share share;
   final UrlLauncher urlLauncher;
 
@@ -54,7 +52,6 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
     return MultiProvider(
       providers: [
         Provider.value(value: widget.database),
-        Provider.value(value: widget.getAppVersion),
         Provider.value(value: widget.share),
         Provider.value(value: widget.urlLauncher),
         Provider.value(value: widget.favoriteNewsArticleRepository),
