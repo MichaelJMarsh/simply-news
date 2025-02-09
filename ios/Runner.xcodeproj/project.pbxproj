@@ -14,8 +14,8 @@
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
-		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		D37B27E8115CF260C2BED842 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ACB6A7FE35546492862AFB0E /* Pods_RunnerTests.framework */; };
+		D429D4802D587ED9004AFA61 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D429D47F2D587ED9004AFA61 /* LaunchScreen.storyboard */; };
 		D4FC21F92D58416300CE4D0E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D4FC21F82D58416300CE4D0E /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -61,10 +61,10 @@
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97C146FB1CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ACB6A7FE35546492862AFB0E /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3DC5FA66D3EF18FF8BA2A19 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		D429D47E2D587ED9004AFA61 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = "Base.lproj/LaunchScreen 2.storyboard"; sourceTree = "<group>"; };
 		D4FC21F82D58416300CE4D0E /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D519A4C6BAC91C87B9325D63 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -143,7 +143,7 @@
 			children = (
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
-				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
+				D429D47F2D587ED9004AFA61 /* LaunchScreen.storyboard */,
 				D4FC21F82D58416300CE4D0E /* GoogleService-Info.plist */,
 				97C147021CF9000F007C117D /* Info.plist */,
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
@@ -262,9 +262,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				D4FC21F92D58416300CE4D0E /* GoogleService-Info.plist in Resources */,
+				D429D4802D587ED9004AFA61 /* LaunchScreen.storyboard in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 			);
@@ -404,10 +404,10 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */ = {
+		D429D47F2D587ED9004AFA61 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				97C147001CF9000F007C117D /* Base */,
+				D429D47E2D587ED9004AFA61 /* LaunchScreen.storyboard */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";

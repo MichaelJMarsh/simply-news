@@ -97,7 +97,8 @@ class NewsArticlePlugin implements NewsArticleService {
 
     if (response.statusCode != 200) {
       throw Exception(
-          'Failed to search articles (status: ${response.statusCode})');
+        'Failed to search articles (status: ${response.statusCode})',
+      );
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
