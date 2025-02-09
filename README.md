@@ -9,21 +9,33 @@ A **Flutter** app that fetches headlines from [NewsAPI.org](https://newsapi.org)
 1. **Text-Only News** – Minimalist news reading experience
 2. **Save / Favorite Articles** – Local storage (e.g., SQLite) for saved headlines
 3. **Auto-Refresh** – Background service to keep news up-to-date
-4. **Unit Testing** – Basic coverage for core business logic
+4. **Testing** – Basic coverage for core business logic and widgets
 
 ---
 
 ## Project Structure
 
+This project follows the **Clean Architecture** pattern, separating concerns into **Data, Domain, and UI layers** for better scalability and maintainability.
+
 ```plaintext
-lib/
-├── main.dart      # App entry point
-├── data/          # Data sources, models, API clients
-├── ui/            # Presentation layer (Widgets, Screens)
-├── services/      # Background tasks, refresh logic
-└── utils/         # Helper methods, constants
-test/              # Unit tests
-pubspec.yaml       # Dependency configuration
+android/              # Android-specific code
+build/                # Generated files
+ios/                  # iOS-specific code
+lib/                  # Main source code
+├── pages/            # Screens and UI pages
+├── widgets/          # Reusable UI components
+├── app_theme.dart    # App-wide theme configuration
+├── app.dart          # Root app widget
+├── bootstrap.dart    # Initialization logic
+├── firebase_options.dart # Firebase configuration
+├── main.dart         # App entry point
+├── runner.dart       # App bootstrapper
+packages/             # Internal modular packages
+├── data/             # Data sources, models, API clients
+├── domain/           # Business logic, use cases, repositories
+test/                 # Unit tests
+pubspec.yaml          # Dependency configuration
+README.md             # Documentation
 ```
 
 ---
