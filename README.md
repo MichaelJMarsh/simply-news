@@ -50,7 +50,7 @@ README.md             # Documentation
 **Note:** The API key is fetched from Firebase Remote Config. You can use the current setup if there are still free API calls remaining. Otherwise, add your own [NewsAPI.org](https://newsapi.org) API key manually by updating the following line in `lib/bootstrap.dart`:
 
 ```bash
-NewsArticlePlugin(apiKey: "YOUR_NEWSAPI_KEY")
+NewsArticleClient(apiKey: "YOUR_NEWSAPI_KEY")
 ```
 
 ---

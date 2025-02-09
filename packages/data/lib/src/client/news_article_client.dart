@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 const _defaultPage = 1;
 const _defaultPageSize = 10;
 
-class NewsArticlePlugin implements NewsArticleService {
-  /// Creates a new instance of [NewsArticlePlugin].
-  const NewsArticlePlugin({required String apiKey}) : _apiKey = apiKey;
+class NewsArticleClient implements NewsArticleService {
+  /// Creates a new instance of [NewsArticleClient].
+  const NewsArticleClient({required String apiKey}) : _apiKey = apiKey;
 
   final String _apiKey;
   static const _baseUrl = 'newsapi.org';
