@@ -47,7 +47,7 @@ class SqfliteDatabase implements Database {
 
 /// Helper class for creating the database schema.
 extension _CreateDatabase on sql.Transaction {
-  /// Creates the database table for the action notes repository.
+  /// Creates the database table for the favorite news article repository.
   Future<void> createFavoriteNewsArticleTable() async {
     return execute('''
       CREATE TABLE ${SqfliteFavoriteNewsArticleRepository.tableName} (
