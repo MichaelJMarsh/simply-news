@@ -11,6 +11,18 @@ import 'package:simply_news/widgets/widgets.dart';
 
 import 'dashboard_page_scope.dart';
 
+/// A dynamic dashboard displaying news articles with a dropdown menu for
+/// selecting news sources, a search bar, and favorite icon button which
+/// navigates users to the [FavoriteArticlesPage].
+///
+/// Users can view news articles, favorite them, and load more articles.
+///
+/// As the users scroll to the bottom of the page, the dashboard will load more
+/// articles. If the user reaches the end of the available articles, they will
+/// be prompted to update the news source or search query.
+///
+/// If a users pulls down on a given list of articles, the dashboard will refresh
+/// the articles.
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 

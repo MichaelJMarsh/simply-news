@@ -6,6 +6,8 @@ import 'package:clock/clock.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
+/// A provider-scoped state management class that handles fetching, searching,
+/// filtering, and favoriting news articles with pagination and real-time updates.
 class DashboardPageScope extends ChangeNotifier {
   /// Creates a new [DashboardPageScope].
   DashboardPageScope({

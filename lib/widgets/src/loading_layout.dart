@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import 'loading_indicator.dart';
 
+/// A vertically centered layout displaying a loading message and indicator.
 class LoadingLayout extends StatelessWidget {
   /// Creates a new [LoadingLayout].
   const LoadingLayout({

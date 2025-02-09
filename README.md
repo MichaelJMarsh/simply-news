@@ -1,15 +1,15 @@
 # Simply News
 
-A **Flutter** app that fetches headlines from [NewsAPI.org](https://newsapi.org) and displays them in a clean, text-focused interface. Built as part of a Headspace Mobile Engineering sample assignment.
+A **Flutter** app that fetches articles from [NewsAPI.org](https://newsapi.org) and displays them in a clean, text-focused interface. Built as part of a Headspace Mobile Engineering sample assignment.
 
 ---
 
 ## Features
 
 1. **Text-Only News** – Minimalist news reading experience.
-2. **Save / Favorite Articles** – Local storage (e.g., SQLite) for saved headlines.
+2. **Save / Favorite Articles** – Local storage (e.g., SQLite) for saved news articles.
 3. **Auto-Refresh** – Background service to keep news up-to-date.
-4. **Testing** – Basic coverage for core business logic and widgets.
+4. **Testing** – Coverage for core business logic and widgets.
 
 ---
 
@@ -32,8 +32,10 @@ lib/                  # Main source code
 ├── runner.dart       # App bootstrapper
 packages/             # Internal modular packages
 ├── data/             # Data sources (API clients, local storage, plugins)
+    ├── test/         # Unit and widgets tests for the data directory
 ├── domain/           # Business logic, models, repositories, services
-test/                 # Unit and widget tests
+    ├── test/         # Unit and widget tests for the domain directory
+test/                 # Unit and widget tests for the lib directory
 pubspec.yaml          # Dependency configuration
 README.md             # Documentation
 ```

@@ -39,7 +39,6 @@ class SqfliteFavoriteNewsArticleRepository
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    // Remove from the local list and emit updated state.
     _favoriteNewsArticles.add(favoriteNewsArticle);
     _eventController.add(List.from(_favoriteNewsArticles));
   }
@@ -91,6 +90,7 @@ class SqfliteFavoriteNewsArticleRepository
       final jsonArticle =
           jsonDecode(map[FavoriteNewsArticleField.article] as String)
               as Map<String, dynamic>;
+
       return FavoriteNewsArticle(
         article: NewsArticle.fromJson(jsonArticle),
         insertionTime: DateTime.fromMillisecondsSinceEpoch(
