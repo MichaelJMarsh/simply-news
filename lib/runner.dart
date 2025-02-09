@@ -1,6 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ThemeMode;
 
+import 'package:domain/domain.dart';
+
+import 'package:simply_news/widgets/widgets.dart';
+
+import 'app_theme.dart';
 import 'app.dart';
 import 'bootstrap.dart';
 
@@ -59,42 +64,54 @@ class _RunnerState extends State<Runner> {
 
   @override
   Widget build(BuildContext context) {
-    final displayApp = _app != null;
-    final displayError = _error != null;
+    final mediaQuery = MediaQuery.of(context);
 
-    Widget child = const _SplashScreen();
-
-    if (displayError) {
-      child = _ErrorScreen(
-        key: Key('error_screen.$displayError'),
-        onRetry: () {
-          _resetInitializationState();
-          _initializeApp();
-        },
-      );
-    } else if (displayApp) {
-      child = KeyedSubtree(
-        key: Key('app.$displayApp'),
-        child: _app!,
-      );
-    }
-
-    return DefaultTextStyle(
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
+    return Theme(
+      data: AppTheme.getTheme(
+        themeMode: ThemeMode.system,
+        platformBrightness: mediaQuery.platformBrightness,
       ),
-      child: AnimatedSwitcher(
-        duration: const Duration(seconds: 1),
-        switchInCurve: Curves.easeIn,
-        switchOutCurve: Curves.fastOutSlowIn,
-        child: child,
+      child: Builder(
+        builder: (context) {
+          final displayApp = _app != null;
+          final displayError = _error != null;
+
+          Widget child = const _SplashScreen();
+
+          if (displayError) {
+            child = _ErrorScreen(
+              key: Key('error_screen.$displayError'),
+              onRetry: () {
+                _resetInitializationState();
+                _initializeApp();
+              },
+            );
+          } else if (displayApp) {
+            child = KeyedSubtree(
+              key: Key('app.$displayApp'),
+              child: _app!,
+            );
+          }
+
+          return DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+            child: AnimatedSwitcher(
+              duration: const Duration(seconds: 1),
+              switchInCurve: Curves.easeIn,
+              switchOutCurve: Curves.fastOutSlowIn,
+              child: child,
+            ),
+          );
+        },
       ),
     );
   }
 }
 
-/// A basic splash screen implementation, used to display a [LoadingIndicatorPulse].
+/// A basic splash screen implementation
 class _SplashScreen extends StatelessWidget {
   /// Creates a new [_SplashScreen].
   const _SplashScreen();
@@ -105,7 +122,16 @@ class _SplashScreen extends StatelessWidget {
 
     return _Scaffold(
       backgroundColor: colorScheme.surface,
-      body: const Text('Loading Simply News ...'),
+      body: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Loading Simply News'),
+          SizedBox(height: 48),
+          Text('Please wait...'),
+          SizedBox(height: 24),
+          LoadingIndicator(),
+        ],
+      ),
     );
   }
 }
