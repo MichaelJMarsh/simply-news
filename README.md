@@ -6,16 +6,16 @@ A **Flutter** app that fetches headlines from [NewsAPI.org](https://newsapi.org)
 
 ## Features
 
-1. **Text-Only News** – Minimalist news reading experience
-2. **Save / Favorite Articles** – Local storage (e.g., SQLite) for saved headlines
-3. **Auto-Refresh** – Background service to keep news up-to-date
-4. **Testing** – Basic coverage for core business logic and widgets
+1. **Text-Only News** – Minimalist news reading experience.
+2. **Save / Favorite Articles** – Local storage (e.g., SQLite) for saved headlines.
+3. **Auto-Refresh** – Background service to keep news up-to-date.
+4. **Testing** – Basic coverage for core business logic and widgets.
 
 ---
 
 ## Project Structure
 
-This project follows the **Clean Architecture** pattern, separating concerns into **Data, Domain, and UI layers** for better scalability and maintainability.
+This project follows the **Clean Architecture** pattern, separating concerns into **Data**, **Domain**, and **UI** layers for better scalability and maintainability.
 
 ```plaintext
 android/              # Android-specific code
@@ -31,9 +31,9 @@ lib/                  # Main source code
 ├── main.dart         # App entry point
 ├── runner.dart       # App bootstrapper
 packages/             # Internal modular packages
-├── data/             # Data sources, models, API clients
-├── domain/           # Business logic, use cases, repositories
-test/                 # Unit tests
+├── data/             # Data sources (API clients, local storage, plugins)
+├── domain/           # Business logic, models, repositories, services
+test/                 # Unit and widget tests
 pubspec.yaml          # Dependency configuration
 README.md             # Documentation
 ```
@@ -42,12 +42,16 @@ README.md             # Documentation
 
 ## Prerequisites
 
-- Flutter SDK (2.0+)
+- Flutter SDK (version 3.27.4)
 - Dart (included with Flutter)
 - Android Studio or Xcode (for emulators/simulators)
 - NewsAPI.org API key (store securely in real-world scenarios)
 
-  Note: Make sure to secure API keys (e.g., via .env or other methods) if deploying to production.
+**Note:** The API key is fetched from Firebase Remote Config. You can use the current setup if there are still free API calls remaining. Otherwise, add your own [NewsAPI.org](https://newsapi.org) API key manually by updating the following line in `lib/bootstrap.dart`:
+
+```bash
+NewsArticlePlugin(apiKey: "YOUR_NEWSAPI_KEY")
+```
 
 ---
 
