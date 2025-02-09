@@ -28,11 +28,10 @@ Future<SimplyNewsApp> bootstrap() async {
 
   return SimplyNewsApp(
     database: database,
-    share: const SharePlugin(),
-    urlLauncher: const UrlLauncherPlugin(),
+    share: SharePlugin(delegate: ShareDelegate()),
+    urlLauncher: UrlLauncherPlugin(delegate: UrlLauncherDelegate()),
     favoriteNewsArticleRepository:
         SqfliteFavoriteNewsArticleRepository(database.instance),
-    settingsRepository: SqfliteSettingsRepository(database.instance),
     newsArticleService: NewsArticleClient(apiKey: remoteConfig.newsApiKey),
   );
 }
