@@ -111,10 +111,12 @@ flutter run -d iPhone-13
 
 ## Usage
 
-1. Launch the app to view the latest articles.
-2. Tap an article to read a text-focused view.
-3. Save (favorite) the article locally by tapping the "ADD TO FAVORITES" floating action button or favorite icon button.
-4. Enjoy automatic refresh via the background service, or manually trigger a refresh on pulldown from the top of the dashboard.
+1. **Launch the app** to view the latest articles on the **dashboard**.
+2. **Tap an article** to read a **text-focused** view.
+3. **Save (favorite) an article** locally by tapping the **"ADD TO FAVORITES"** floating action button or **favorite icon**.
+4. **Access saved articles** anytime by navigating to the **Favorites Page**.
+5. **Scroll down on the dashboard** to load more articles via **paginated scrolling** (new articles load until no more are available).
+6. **Enjoy automatic refresh** via the background service, or manually trigger a refresh by pulling down from the top of the dashboard.
 
 ---
 
