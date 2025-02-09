@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:simply_news/widgets/widgets.dart';
+import 'package:simply_news/widgets/src/loading_indicator.dart';
+import 'package:simply_news/widgets/src/loading_layout.dart';
 
 void main() {
   group('LoadingLayout', () {

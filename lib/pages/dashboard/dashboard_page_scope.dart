@@ -6,6 +6,8 @@ import 'package:clock/clock.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
+/// A provider-scoped state management class that handles fetching, searching,
+/// filtering, and favoriting news articles with pagination and real-time updates.
 class DashboardPageScope extends ChangeNotifier {
   /// Creates a new [DashboardPageScope].
   DashboardPageScope({
@@ -215,25 +217,13 @@ class DashboardPageScope extends ChangeNotifier {
     notifyListeners();
 
     try {
-      SearchResult result;
-      if (_currentQuery.isNotEmpty) {
-        result = await _newsArticleService.searchArticles(
-          query: _currentQuery,
-          page: page,
-          pageSize: _pageSize,
-          sourceId: (_selectedSourceId?.isNotEmpty == true)
-              ? _selectedSourceId
-              : null,
-        );
-      } else if (_selectedSourceId?.isNotEmpty == true) {
-        result = await _newsArticleService.fetchArticlesBySource(
-          sourceId: _selectedSourceId!,
-          page: page,
-          pageSize: _pageSize,
-        );
-      } else {
-        result = const SearchResult(articles: [], totalResults: 0);
-      }
+      final result = await _newsArticleService.searchArticles(
+        query: _currentQuery,
+        page: page,
+        pageSize: _pageSize,
+        sourceId:
+            (_selectedSourceId?.isNotEmpty == true) ? _selectedSourceId : null,
+      );
 
       final newArticles = result.articles;
       final totalResults = result.totalResults;
@@ -244,8 +234,6 @@ class DashboardPageScope extends ChangeNotifier {
         _newsArticles.addAll(newArticles);
       }
 
-      // If the total # of articles loaded so far < totalResults, then
-      // we can load more.
       final loadedSoFar = _currentPage * _pageSize;
       _hasMoreArticles = (loadedSoFar < totalResults);
     } catch (e) {

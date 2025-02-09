@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:domain/domain.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-import 'package:simply_news/widgets/widgets.dart';
+import 'package:simply_news/widgets/src/favorite_icon_button.dart';
+import 'package:simply_news/widgets/src/news_article_card.dart';
 
 void main() {
   group('NewsArticleCard', () {

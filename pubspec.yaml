@@ -1,5 +1,5 @@
 name: simply_news
-description: "A new Flutter project."
+description: "A text-focused news app fetching data from NewsAPI.org, with favorites, offline storage, and real-time updates."
 publish_to: "none"
 version: 1.0.0+1
 

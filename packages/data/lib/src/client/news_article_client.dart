@@ -39,42 +39,6 @@ class NewsArticleClient implements NewsArticleService {
   }
 
   @override
-  Future<SearchResult> fetchArticlesBySource({
-    required String sourceId,
-    int pageSize = _defaultPageSize,
-    int page = _defaultPage,
-  }) async {
-    final queryParameters = {
-      'sources': sourceId,
-      'pageSize': pageSize.toString(),
-      'page': page.toString(),
-      'apiKey': _apiKey,
-    };
-
-    final uri = Uri.https(_baseUrl, '/v2/top-headlines', queryParameters);
-    final response = await _client.get(uri);
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to fetch articles by source '
-          '(status: ${response.statusCode})');
-    }
-
-    final data = jsonDecode(response.body) as Map<String, dynamic>;
-    if (!data.containsKey('articles')) {
-      return const SearchResult(articles: [], totalResults: 0);
-    }
-
-    final articlesJson = data['articles'] as List;
-    final articles = articlesJson
-        .map((json) => NewsArticle.fromJson(json as Map<String, dynamic>))
-        .toList();
-
-    final totalResults = data['totalResults'] as int? ?? articles.length;
-
-    return SearchResult(articles: articles, totalResults: totalResults);
-  }
-
-  @override
   Future<SearchResult> searchArticles({
     required String query,
     String searchIn = 'title',

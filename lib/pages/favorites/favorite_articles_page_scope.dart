@@ -5,6 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
+/// A provider-scoped state management class that tracks and updates the
+/// user’s favorite news articles in real time using a repository and
+/// stream subscription.
 class FavoriteArticlesPageScope extends ChangeNotifier {
   /// Creates a new [FavoriteArticlesPageScope].
   FavoriteArticlesPageScope({
