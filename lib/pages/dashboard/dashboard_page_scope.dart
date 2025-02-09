@@ -70,7 +70,8 @@ class DashboardPageScope extends ChangeNotifier {
   static const _pageSize = 10;
 
   /// Whether there are more items to load.
-  bool _queryHasMoreItems = true;
+  bool get hasMoreArticles => _hasMoreArticles;
+  bool _hasMoreArticles = true;
 
   Future<void> initialize() async {
     _favoriteNewsArticleUrls = await _getFavoriteNewsArticleUrls();
@@ -150,7 +151,7 @@ class DashboardPageScope extends ChangeNotifier {
   Future<void> selectSource(String? sourceId) async {
     _selectedSourceId = sourceId;
     _currentPage = 1;
-    _queryHasMoreItems = true;
+    _hasMoreArticles = true;
 
     // Clear out old articles.
     _newsArticles = [];
@@ -168,7 +169,7 @@ class DashboardPageScope extends ChangeNotifier {
     if (query.isEmpty && _selectedSourceId == null) {
       _currentQuery = "";
       _currentPage = 1;
-      _queryHasMoreItems = true;
+      _hasMoreArticles = true;
       _newsArticles = [];
       notifyListeners();
 
@@ -181,7 +182,7 @@ class DashboardPageScope extends ChangeNotifier {
       // Clear existing articles before reload.
       _newsArticles = [];
       _currentPage = 1;
-      _queryHasMoreItems = true;
+      _hasMoreArticles = true;
       notifyListeners();
 
       await _loadArticles(page: _currentPage, reset: true);
@@ -191,7 +192,7 @@ class DashboardPageScope extends ChangeNotifier {
   /// Refresh the articles list by loading the first page.
   Future<void> refreshArticles() async {
     _currentPage = 1;
-    _queryHasMoreItems = true;
+    _hasMoreArticles = true;
     _newsArticles = [];
 
     notifyListeners();
@@ -201,7 +202,7 @@ class DashboardPageScope extends ChangeNotifier {
 
   /// Loads more articles (next page), if available.
   Future<void> loadMoreArticles() async {
-    if (_isLoadingMore || !_queryHasMoreItems || _isLoading) return;
+    if (_isLoadingMore || !_hasMoreArticles || _isLoading) return;
 
     _currentPage++;
     await _loadArticles(page: _currentPage);
@@ -246,7 +247,7 @@ class DashboardPageScope extends ChangeNotifier {
       // If the total # of articles loaded so far < totalResults, then
       // we can load more.
       final loadedSoFar = _currentPage * _pageSize;
-      _queryHasMoreItems = (loadedSoFar < totalResults);
+      _hasMoreArticles = (loadedSoFar < totalResults);
     } catch (e) {
       // Record the error to Firebase Crashlytics or similar service.
     } finally {
