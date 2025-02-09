@@ -1,6 +1,8 @@
 // Models
 export 'src/model/favorite_news_article.dart';
 export 'src/model/news_article.dart';
+export 'src/model/news_source.dart';
+export 'src/model/search_result.dart';
 export 'src/model/settings_data.dart';
 export 'src/model/theme_mode.dart';
 

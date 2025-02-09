@@ -104,31 +104,100 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = 32 + MediaQuery.paddingOf(context).bottom;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final padding = MediaQuery.paddingOf(context);
+    final bottomPadding = 32 + padding.bottom;
+    final topPadding = 16 + padding.top;
 
     final dashboard = context.watch<DashboardPageScope>();
     final isLoading = dashboard.isLoading;
 
+    const dropDownHeight = 48.0;
+    const searchBarHeight = 56.0;
+    const searchBarVerticalPadding = 8.0;
+
     return Scaffold(
-      appBar: AppBar(
-        title: AnimatedTranslation.vertical(
-          animation: _enterAnimations.appBarTitle,
-          pixels: 32,
-          child: const Text('Simply News'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(
+          topPadding + dropDownHeight + searchBarVerticalPadding,
         ),
-        actions: [
-          AnimatedTranslation.horizontal(
-            animation: _enterAnimations.appBarButton,
-            pixels: 24,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.favorite),
+        child: AppBar(
+          backgroundColor: WidgetStateColor.resolveWith((states) {
+            return states.contains(WidgetState.scrolledUnder)
+                ? colorScheme.primary.withValues(alpha: 0.24)
+                : Colors.transparent;
+          }),
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: topPadding),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AnimatedTranslation.vertical(
+                      animation: _enterAnimations.appBarTitle,
+                      pixels: 32,
+                      child: DropdownButton(
+                        value: dashboard.selectedSourceId?.isEmpty == true
+                            ? null
+                            : dashboard.selectedSourceId,
+                        hint: const Text('Select Source'),
+                        underline: const SizedBox(),
+                        items: [
+                          // Option to clear selection
+                          const DropdownMenuItem(
+                            value: '',
+                            child: Text('All Sources'),
+                          ),
+                          // Actual sources
+                          ...dashboard.sources.map(
+                            (source) => DropdownMenuItem(
+                              value: source.id,
+                              child: Text(source.name),
+                            ),
+                          ),
+                        ],
+                        onChanged: (sourceId) =>
+                            dashboard.selectSource(sourceId),
+                      ),
+                    ),
+                    AnimatedTranslation.horizontal(
+                      animation: _enterAnimations.appBarButton,
+                      pixels: 24,
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.favorite),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: searchBarVerticalPadding),
+              ],
+            ),
+          ),
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(searchBarHeight),
+            child: AnimatedTranslation.vertical(
+              animation: _enterAnimations.searchBar,
+              pixels: 32,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: searchBarVerticalPadding,
+                ),
+                child: SearchBar(
+                  key: const Key('search_bar'),
+                  hintText: 'Search for news articles...',
+                  onChanged: dashboard.searchNewsArticles,
+                  onSubmitted: dashboard.searchNewsArticles,
+                ),
               ),
             ),
           ),
-        ],
+        ),
       ),
       body: AnimatedSwitcher(
         switchInCurve: Curves.easeIn,
@@ -154,25 +223,8 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                   physics: const BouncingScrollPhysics(),
                   slivers: [
                     SliverPadding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 16,
-                      ),
-                      sliver: SliverToBoxAdapter(
-                        child: AnimatedTranslation.vertical(
-                          animation: _enterAnimations.searchBar,
-                          pixels: 32,
-                          child: SearchBar(
-                            key: const Key('search_bar'),
-                            hintText: 'Search for news articles...',
-                            onChanged: dashboard.searchNewsArticles,
-                            onSubmitted: dashboard.searchNewsArticles,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SliverPadding(
                       padding: EdgeInsets.only(
+                        top: 24,
                         bottom: bottomPadding,
                       ),
                       sliver: SliverList.separated(

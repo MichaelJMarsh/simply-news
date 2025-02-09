@@ -1,10 +1,23 @@
-import 'package:domain/src/model/news_article.dart';
+import 'package:domain/src/model/news_source.dart';
+import 'package:domain/src/model/search_result.dart';
 
 /// The interface for accessing news articles.
 abstract class NewsArticleService {
   const NewsArticleService._();
 
-  /// Returns a list of [NewsArticle]s for the given [query].
+  /// Returns a list of all available news sources.
+  Future<List<NewsSource>> fetchSources();
+
+  /// Returns a [SearchResult] (articles + total count) from the given [sourceId].
+  ///
+  /// If [sourceId] is null/empty, fetch from all sources.
+  Future<SearchResult> fetchArticlesBySource({
+    required String sourceId,
+    int pageSize,
+    int page,
+  });
+
+  /// Returns a [SearchResult] (articles + total count) from the given [query].
   ///
   /// The [searchIn] parameter specifies the fields to search in.
   ///
@@ -15,12 +28,13 @@ abstract class NewsArticleService {
   /// The [pageSize] parameter specifies the number of articles to return.
   ///
   /// The [page] parameter specifies the page number to return.
-  Future<List<NewsArticle>> searchArticles({
+  Future<SearchResult> searchArticles({
     required String query,
-    String searchIn = 'title,description,content', // Search in all fields
-    String language = 'en',
-    String sortBy = 'publishedAt',
-    int pageSize = 10,
-    int page = 1,
+    String searchIn,
+    String language,
+    String sortBy,
+    int pageSize,
+    int page,
+    String? sourceId,
   });
 }

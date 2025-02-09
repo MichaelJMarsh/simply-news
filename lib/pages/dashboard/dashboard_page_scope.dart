@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/widgets.dart';
+
 import 'package:clock/clock.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
@@ -24,25 +26,38 @@ class DashboardPageScope extends ChangeNotifier {
   final FavoriteNewsArticleRepository _favoriteNewsArticleRepository;
   final NewsArticleService _newsArticleService;
 
-  /// Subscription for favorite news article changes.
+  /// The subscription which listens to changes in favorite news articles.
   StreamSubscription<List<FavoriteNewsArticle>>?
       _favoriteNewsArticleStreamSubscription;
 
-  /// The list of news articles to display.
+  /// The list of news articles.
   List<NewsArticle> get newsArticles => _newsArticles;
   List<NewsArticle> _newsArticles = [];
 
-  /// The list of favorite article URLs.
+  /// The list of news sources.
+  List<NewsSource> get sources => _sources;
+  List<NewsSource> _sources = [];
+
+  /// Whether we are currently loading sources.
+  bool get isLoadingSources => _isLoadingSources;
+  bool _isLoadingSources = false;
+
+  /// The currently selected source (if any).
+  String? get selectedSourceId => _selectedSourceId;
+  String? _selectedSourceId;
+
+  /// Search/favorites state
   List<String> _favoriteNewsArticleUrls = [];
 
-  /// Indicates if the first page is loading.
+  /// Whether the page is loading.
   bool get isLoading => _isLoading;
   bool _isLoading = true;
 
-  /// Indicates if additional (paginated) articles are being loaded.
+  /// Whether we are loading more articles.
   bool get isLoadingMore => _isLoadingMore;
   bool _isLoadingMore = false;
 
+  /// The timer used for debouncing search queries.
   Timer? _debounce;
 
   /// The current search query.
@@ -51,19 +66,19 @@ class DashboardPageScope extends ChangeNotifier {
   /// The current page of articles.
   int _currentPage = 1;
 
-  /// Number of articles to load per page.
+  /// The number of articles to load per page.
   static const _pageSize = 10;
 
-  /// Whether there are more items available for the current query.
+  /// Whether there are more items to load.
   bool _queryHasMoreItems = true;
 
-  /// Initializes the scope. (No articles are loaded until a search is performed.)
   Future<void> initialize() async {
     _favoriteNewsArticleUrls = await _getFavoriteNewsArticleUrls();
     _initializeFavoriteNewsArticleStreamSubscription();
 
-    _isLoading = false;
+    await _loadSources();
 
+    _isLoading = false;
     notifyListeners();
   }
 
@@ -75,7 +90,7 @@ class DashboardPageScope extends ChangeNotifier {
     super.dispose();
   }
 
-  /// Subscribes to favorite article changes.
+  /// Subscribes to favorite article changes
   void _initializeFavoriteNewsArticleStreamSubscription() {
     _favoriteNewsArticleStreamSubscription =
         _favoriteNewsArticleRepository.changes.listen((favoriteNewsArticles) {
@@ -93,84 +108,13 @@ class DashboardPageScope extends ChangeNotifier {
     return _favoriteNewsArticleUrls.contains(articleUrl);
   }
 
-  /// Called when the search query changes.
-  ///
-  /// This debounces the input and triggers a refresh.
-  Future<void> searchNewsArticles(String query) async {
-    _debounce?.cancel();
-
-    if (query.isEmpty) {
-      _clearSearch();
-      return;
-    }
-
-    _debounce = Timer(const Duration(milliseconds: 500), () async {
-      _currentQuery = query;
-      await refreshArticles();
-    });
-  }
-
-  /// Clear the articles and reset search state
-  void _clearSearch() {
-    _newsArticles = [];
-    _currentQuery = "";
-    _currentPage = 1;
-    _queryHasMoreItems = true;
-
-    notifyListeners();
-  }
-
-  /// Refreshes the articles list by loading the first page.
-  ///
-  /// If no articles exist yet, [isLoading] is set to true so that the UI
-  /// can show a full-screen loader. If there are already articles,
-  /// a refresh is done without toggling [isLoading].
-  Future<void> refreshArticles() async {
-    _currentPage = 1;
-    _queryHasMoreItems = true;
-
-    await _loadArticles(page: _currentPage, reset: true);
-  }
-
-  /// Loads more articles (next page) if available.
-  Future<void> loadMoreArticles() async {
-    if (_isLoadingMore || !_queryHasMoreItems || _isLoading) return;
-
-    _currentPage++;
-    await _loadArticles(page: _currentPage, reset: false);
-  }
-
-  /// Loads articles from the service.
-  ///
-  /// When [reset] is true, the articles list is replaced. Otherwise, the new
-  /// articles are appended.
-  Future<void> _loadArticles({required int page, bool reset = false}) async {
-    _isLoadingMore = true;
-    notifyListeners();
-
-    try {
-      final articles = await _newsArticleService.searchArticles(
-        query: _currentQuery,
-        page: page,
-        pageSize: _pageSize,
-      );
-
-      if (reset) {
-        _newsArticles = articles;
-      } else {
-        _newsArticles.addAll(articles);
-      }
-
-      // If fewer articles than requested are returned, assume no more pages.
-      if (articles.length < _pageSize) {
-        _queryHasMoreItems = false;
-      }
-    } catch (e) {
-      // Record the error to Firebase Crashlytics or similar service.
-    } finally {
-      _isLoadingMore = false;
-      notifyListeners();
-    }
+  /// Returns the favorite news article URLs.
+  Future<List<String>> _getFavoriteNewsArticleUrls() async {
+    final favoriteNewsArticles = await _favoriteNewsArticleRepository.list();
+    return favoriteNewsArticles
+        .map((favoriteNewsArticle) => favoriteNewsArticle.article.url)
+        .whereType<String>()
+        .toList();
   }
 
   /// Toggles the favorite status of the given [article].
@@ -187,12 +131,127 @@ class DashboardPageScope extends ChangeNotifier {
     );
   }
 
-  /// Retrieves the URLs for all favorite news articles.
-  Future<List<String>> _getFavoriteNewsArticleUrls() async {
-    final favoriteNewsArticles = await _favoriteNewsArticleRepository.list();
-    return favoriteNewsArticles
-        .map((favoriteNewsArticle) => favoriteNewsArticle.article.url)
-        .whereType<String>()
-        .toList();
+  /// Load all available news sources.
+  Future<void> _loadSources() async {
+    _isLoadingSources = true;
+    notifyListeners();
+
+    try {
+      _sources = await _newsArticleService.fetchSources();
+    } catch (e) {
+      // Record the error to Firebase Crashlytics or similar service.
+    } finally {
+      _isLoadingSources = false;
+      notifyListeners();
+    }
+  }
+
+  /// Select a particular source. If null or empty, we'll revert to "search all".
+  Future<void> selectSource(String? sourceId) async {
+    _selectedSourceId = sourceId;
+    _currentPage = 1;
+    _queryHasMoreItems = true;
+
+    // Clear out old articles.
+    _newsArticles = [];
+    notifyListeners();
+
+    // Reload articles based on current query & new source.
+    await refreshArticles();
+  }
+
+  /// Search for news articles based on the given [query].
+  Future<void> searchNewsArticles(String query) async {
+    _debounce?.cancel();
+
+    // Reset to all sources if query is empty and no source is selected.
+    if (query.isEmpty && _selectedSourceId == null) {
+      _currentQuery = "";
+      _currentPage = 1;
+      _queryHasMoreItems = true;
+      _newsArticles = [];
+      notifyListeners();
+
+      return;
+    }
+
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+      _currentQuery = query;
+
+      // Clear existing articles before reload.
+      _newsArticles = [];
+      _currentPage = 1;
+      _queryHasMoreItems = true;
+      notifyListeners();
+
+      await _loadArticles(page: _currentPage, reset: true);
+    });
+  }
+
+  /// Refresh the articles list by loading the first page.
+  Future<void> refreshArticles() async {
+    _currentPage = 1;
+    _queryHasMoreItems = true;
+    _newsArticles = [];
+
+    notifyListeners();
+
+    await _loadArticles(page: _currentPage, reset: true);
+  }
+
+  /// Loads more articles (next page), if available.
+  Future<void> loadMoreArticles() async {
+    if (_isLoadingMore || !_queryHasMoreItems || _isLoading) return;
+
+    _currentPage++;
+    await _loadArticles(page: _currentPage);
+  }
+
+  /// Loads articles, either via search (everything) or via top-headlines,
+  /// depending on whether [_currentQuery] is empty or not.
+  Future<void> _loadArticles({required int page, bool reset = false}) async {
+    _isLoadingMore = true;
+    notifyListeners();
+
+    try {
+      SearchResult result;
+      if (_currentQuery.isNotEmpty) {
+        result = await _newsArticleService.searchArticles(
+          query: _currentQuery,
+          page: page,
+          pageSize: _pageSize,
+          sourceId: (_selectedSourceId?.isNotEmpty == true)
+              ? _selectedSourceId
+              : null,
+        );
+      } else if (_selectedSourceId?.isNotEmpty == true) {
+        result = await _newsArticleService.fetchArticlesBySource(
+          sourceId: _selectedSourceId!,
+          page: page,
+          pageSize: _pageSize,
+        );
+      } else {
+        result = const SearchResult(articles: [], totalResults: 0);
+      }
+
+      final newArticles = result.articles;
+      final totalResults = result.totalResults;
+
+      if (reset) {
+        _newsArticles = newArticles;
+      } else {
+        _newsArticles.addAll(newArticles);
+      }
+
+      // If the total # of articles loaded so far < totalResults, then
+      // we can load more.
+      final loadedSoFar = _currentPage * _pageSize;
+      _queryHasMoreItems = (loadedSoFar < totalResults);
+    } catch (e) {
+      // Record the error to Firebase Crashlytics or similar service.
+    } finally {
+      _isLoadingMore = false;
+      notifyListeners();
+    }
   }
 }
