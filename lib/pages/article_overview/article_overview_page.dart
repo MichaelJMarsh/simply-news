@@ -148,6 +148,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
 
         return Scaffold(
           appBar: AppBar(
+            clipBehavior: Clip.none,
             title: AnimatedTranslation.vertical(
               animation: _enterAnimations.appBarTitle,
               pixels: 32,

@@ -4,9 +4,9 @@ import 'package:domain/domain.dart';
 
 import 'package:simply_news/widgets/widgets.dart';
 
-class NewsArticleTile extends StatelessWidget {
-  /// Creates a new [NewsArticleTile].
-  const NewsArticleTile({
+class NewsArticleCard extends StatelessWidget {
+  /// Creates a new [NewsArticleCard].
+  const NewsArticleCard({
     super.key,
     required this.article,
     required this.isFavorite,

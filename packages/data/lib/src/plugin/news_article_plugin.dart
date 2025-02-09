@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:domain/domain.dart';
 import 'package:http/http.dart' as http;
 
@@ -6,6 +7,7 @@ const _defaultPage = 1;
 const _defaultPageSize = 10;
 
 class NewsArticlePlugin implements NewsArticleService {
+  /// Creates a new instance of [NewsArticlePlugin].
   const NewsArticlePlugin({required String apiKey}) : _apiKey = apiKey;
 
   final String _apiKey;
@@ -17,7 +19,8 @@ class NewsArticlePlugin implements NewsArticleService {
     final response = await http.get(uri);
     if (response.statusCode != 200) {
       throw Exception(
-          'Failed to fetch sources (status: ${response.statusCode})');
+        'Failed to fetch sources (status: ${response.statusCode})',
+      );
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
