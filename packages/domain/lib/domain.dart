@@ -11,7 +11,6 @@ export 'src/repository/favorite_news_article_repository.dart';
 export 'src/repository/settings_repository.dart';
 
 // Services
-export 'src/service/get_app_version.dart';
 export 'src/service/news_article_service.dart';
 export 'src/service/remote_configuration_service.dart';
 export 'src/service/share.dart';
