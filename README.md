@@ -154,13 +154,13 @@ Or run everything at once using my custom script:
 dart run_all_tests.dart
 ```
 
-### Thank you for taking the time to explore Simply News!
+## Thank you for taking the time to explore Simply News!
 
-I built this project in just 24 hours as part of a Headspace Mobile Engineering assignment, demonstrating my ability to rapidly develop and refine a full-featured Flutter application. From efficient state management to a seamless user experience, this project showcases my expertise in building high-quality, performant mobile apps.
+I built this project in just 24 hours as part of a Headspace Mobile Engineering assignment, demonstrating my ability to rapidly develop and refine a full-featured Flutter application while adhering to industry best practices. From efficient state management to a seamless user experience, this project showcases my expertise in building high-quality, performant, and scalable mobile apps that are maintainable long-term.
 
 If you’re looking for a **Flutter developer** who thrives under tight deadlines without compromising quality, let’s connect! Feel free to **reach out**, **open an issue**, or **submit a pull request**—I’m always open to new opportunities and collaborations! 🚀
 
-#### 🔗 Checkout my other work
+### 🔗 Checkout my other work
 
 [CannaBook](https://cannabook.tech) - A personal project with over **20,000 downloads**, **1,000 active users**, and **200 premium subscribers**! This cross-platform (Android & iOS) app fully showcases my ability to build, scale, and monetize Flutter applications.
 
