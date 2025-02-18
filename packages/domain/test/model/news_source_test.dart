@@ -45,8 +45,10 @@ void main() {
       final json = source.toJson();
       expect(json[NewsSourceField.id], 'bbc-news');
       expect(json[NewsSourceField.name], 'BBC News');
-      expect(json[NewsSourceField.description],
-          'BBC News provides reliable updates');
+      expect(
+        json[NewsSourceField.description],
+        'BBC News provides reliable updates',
+      );
       expect(json[NewsSourceField.url], 'https://bbc.co.uk');
       expect(json[NewsSourceField.category], 'general');
       expect(json[NewsSourceField.language], 'en');
@@ -74,10 +76,7 @@ void main() {
         country: 'us',
       );
 
-      const differentSource = NewsSource(
-        id: 'bbc-news',
-        name: 'BBC News',
-      );
+      const differentSource = NewsSource(id: 'bbc-news', name: 'BBC News');
 
       expect(expectedSource, equals(sameSource));
       expect(expectedSource.hashCode, equals(sameSource.hashCode));

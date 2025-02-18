@@ -1,28 +1,28 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:simply_news/widgets/widgets.dart';
+import 'package:simply_news/presentation/widgets/widgets.dart';
 
-import 'app_theme.dart';
+import 'config/app_theme.dart';
 import 'app.dart';
 import 'bootstrap.dart';
 
-/// The widget which attempts to run the [SimplyNewsApp].
+/// The widget which attempts to launch the [SimplyNewsApp].
 ///
 /// If the [SimplyNewsApp] is still initializing, a splash screen is displayed.
 ///
 /// If the [SimplyNewsApp] fails to initialize, an error screen is displayed.
 ///
 /// The [SimplyNewsApp] is displayed once it has been successfully initialized.
-class Runner extends StatefulWidget {
-  /// Creates a new [Runner].
-  const Runner({super.key});
+class Launcher extends StatefulWidget {
+  /// Creates a new [Launcher].
+  const Launcher({super.key});
 
   @override
-  State<StatefulWidget> createState() => _RunnerState();
+  State<StatefulWidget> createState() => _LauncherState();
 }
 
-class _RunnerState extends State<Runner> {
+class _LauncherState extends State<Launcher> {
   SimplyNewsApp? _app;
   Object? _error;
 
@@ -36,7 +36,7 @@ class _RunnerState extends State<Runner> {
   /// Attempts to initialize the [SimplyNewsApp], then updates the state.
   Future<void> _initializeApp() async {
     try {
-      final app = await bootstrap();
+      final app = await Bootstrap.initializeApp();
 
       if (!mounted) return;
 
@@ -84,17 +84,11 @@ class _RunnerState extends State<Runner> {
               },
             );
           } else if (displayApp) {
-            child = KeyedSubtree(
-              key: Key('app.$displayApp'),
-              child: _app!,
-            );
+            child = KeyedSubtree(key: Key('app.$displayApp'), child: _app!);
           }
 
           return DefaultTextStyle(
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             child: AnimatedSwitcher(
               duration: const Duration(seconds: 1),
               switchInCurve: Curves.easeIn,
@@ -197,10 +191,7 @@ class _ErrorScreen extends StatelessWidget {
 /// A basic scaffold implementation, used to display a splash screen.
 class _Scaffold extends StatelessWidget {
   /// Creates a new [_Scaffold].
-  const _Scaffold({
-    required this.backgroundColor,
-    required this.body,
-  });
+  const _Scaffold({required this.backgroundColor, required this.body});
 
   /// The background color of the scaffold.
   final Color backgroundColor;
@@ -214,9 +205,7 @@ class _Scaffold extends StatelessWidget {
       textDirection: TextDirection.ltr,
       child: DecoratedBox(
         decoration: BoxDecoration(color: backgroundColor),
-        child: Center(
-          child: body,
-        ),
+        child: Center(child: body),
       ),
     );
   }

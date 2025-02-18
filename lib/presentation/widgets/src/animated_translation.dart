@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-/// A widget that animates its child by moving it vertically or horizontally,
-/// while fading the child in or out of view.
+/// A widget that animates its child by moving it vertically or horizontally
+/// as it fades in or out.
 class AnimatedTranslation extends StatelessWidget {
-  /// Creates a new [AnimatedTranslation].
   const AnimatedTranslation._({
     super.key,
     required this.animation,
@@ -62,16 +61,14 @@ class AnimatedTranslation extends StatelessWidget {
       animation: animation,
       builder: (_, animatedChild) {
         final animatedValue = pixels * (1 - animation.value);
-        final translation = axis == Axis.vertical
-            ? Offset(0, animatedValue)
-            : Offset(animatedValue, 0);
+        final translation =
+            axis == Axis.vertical
+                ? Offset(0, animatedValue)
+                : Offset(animatedValue, 0);
 
         return Transform.translate(
           offset: translation,
-          child: Opacity(
-            opacity: animation.value,
-            child: animatedChild,
-          ),
+          child: Opacity(opacity: animation.value, child: animatedChild),
         );
       },
       child: child,

@@ -30,10 +30,7 @@ class AnimatedCounter extends StatelessWidget {
       duration: duration,
       curve: curve,
       builder: (_, animationValue, __) {
-        return Text(
-          animationValue.toString(),
-          style: style,
-        );
+        return Text(animationValue.toString(), style: style);
       },
     );
   }

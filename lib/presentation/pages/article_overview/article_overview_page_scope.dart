@@ -13,8 +13,8 @@ class ArticleOverviewPageScope extends ChangeNotifier {
   ArticleOverviewPageScope({
     required NewsArticle article,
     required FavoriteNewsArticleRepository favoriteNewsArticleRepository,
-  })  : _article = article,
-        _favoriteNewsArticleRepository = favoriteNewsArticleRepository;
+  }) : _article = article,
+       _favoriteNewsArticleRepository = favoriteNewsArticleRepository;
 
   /// Creates a new [ArticleOverviewPageScope] from the [context].
   factory ArticleOverviewPageScope.of(
@@ -77,9 +77,7 @@ class ArticleOverviewPageScope extends ChangeNotifier {
         insertionTime: now,
       );
 
-      await _favoriteNewsArticleRepository.insert(
-        favoriteNewsArticle,
-      );
+      await _favoriteNewsArticleRepository.insert(favoriteNewsArticle);
       _favoriteNewsArticle = favoriteNewsArticle;
     }
 

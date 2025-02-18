@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
-import 'package:simply_news/pages/article_overview/article_overview_page.dart';
-import 'package:simply_news/widgets/widgets.dart';
+import 'package:simply_news/presentation/pages/article_overview/article_overview_page.dart';
+import 'package:simply_news/presentation/widgets/widgets.dart';
 
 import 'favorite_articles_page_scope.dart';
 
@@ -97,10 +97,7 @@ class _FavoriteArticlesPageState extends State<FavoriteArticlesPage>
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverPadding(
-              padding: EdgeInsets.only(
-                top: 24,
-                bottom: bottomPadding,
-              ),
+              padding: EdgeInsets.only(top: 24, bottom: bottomPadding),
               sliver: SliverList.separated(
                 itemCount: favorites.list.length,
                 separatorBuilder: (_, __) => const Divider(),
@@ -114,10 +111,11 @@ class _FavoriteArticlesPageState extends State<FavoriteArticlesPage>
                       article: newsArticle,
                       isFavorite: favorites.isFavorite(newsArticle),
                       onFavorite: () => favorites.removeFavorite(newsArticle),
-                      onPressed: () => _openArticleOverview(
-                        context,
-                        article: newsArticle,
-                      ),
+                      onPressed:
+                          () => _openArticleOverview(
+                            context,
+                            article: newsArticle,
+                          ),
                     ),
                   );
                 },
@@ -132,17 +130,13 @@ class _FavoriteArticlesPageState extends State<FavoriteArticlesPage>
         final isLoading = favorites.isLoading;
         if (isLoading) {
           body = AnimatedTranslation.vertical(
-            key: Key(
-              'loading_indicator.${isLoading ? 'visible' : 'hidden'}',
-            ),
+            key: Key('loading_indicator.${isLoading ? 'visible' : 'hidden'}'),
             animation: _enterAnimations.body,
             pixels: 32,
             child: Padding(
               padding: EdgeInsets.only(bottom: appBarHeight),
               child: const Center(
-                child: LoadingLayout(
-                  message: Text('Loading news articles...'),
-                ),
+                child: LoadingLayout(message: Text('Loading news articles...')),
               ),
             ),
           );
@@ -167,8 +161,9 @@ class _FavoriteArticlesPageState extends State<FavoriteArticlesPage>
                           'TAP THE HEART ICON ON AN ARTICLE TO ADD IT TO YOUR '
                           'FAVORITES',
                           style: TextStyle(
-                            color:
-                                colorScheme.onSurface.withValues(alpha: 0.64),
+                            color: colorScheme.onSurface.withValues(
+                              alpha: 0.64,
+                            ),
                           ),
                         ),
                       ],
@@ -183,13 +178,11 @@ class _FavoriteArticlesPageState extends State<FavoriteArticlesPage>
         return Scaffold(
           appBar: AppBar(
             clipBehavior: Clip.none,
-            backgroundColor: WidgetStateColor.resolveWith(
-              (states) {
-                return states.contains(WidgetState.scrolledUnder)
-                    ? colorScheme.primary.withValues(alpha: 0.24)
-                    : Colors.transparent;
-              },
-            ),
+            backgroundColor: WidgetStateColor.resolveWith((states) {
+              return states.contains(WidgetState.scrolledUnder)
+                  ? colorScheme.primary.withValues(alpha: 0.24)
+                  : Colors.transparent;
+            }),
             title: Column(
               children: [
                 AnimatedTranslation.vertical(
@@ -240,22 +233,22 @@ class _FavoriteArticlesPageState extends State<FavoriteArticlesPage>
 /// The entrance animations for each item on the [FavoriteArticlesPage].
 class _EnterAnimations {
   _EnterAnimations(this.controller)
-      : appBarButton = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.000, 0.500, curve: Curves.fastOutSlowIn),
-        ),
-        appBarTitle = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.050, 0.550, curve: Curves.fastOutSlowIn),
-        ),
-        appBarSubtitle = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.075, 0.575, curve: Curves.fastOutSlowIn),
-        ),
-        body = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.200, 0.700, curve: Curves.fastOutSlowIn),
-        );
+    : appBarButton = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.000, 0.500, curve: Curves.fastOutSlowIn),
+      ),
+      appBarTitle = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.050, 0.550, curve: Curves.fastOutSlowIn),
+      ),
+      appBarSubtitle = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.075, 0.575, curve: Curves.fastOutSlowIn),
+      ),
+      body = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.200, 0.700, curve: Curves.fastOutSlowIn),
+      );
 
   final AnimationController controller;
 

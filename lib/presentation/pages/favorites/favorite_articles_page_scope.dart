@@ -15,9 +15,7 @@ class FavoriteArticlesPageScope extends ChangeNotifier {
   }) : _favoriteNewsArticleRepository = favoriteNewsArticleRepository;
 
   /// Creates a new [FavoriteArticlesPageScope] from the [context].
-  factory FavoriteArticlesPageScope.of(
-    final BuildContext context,
-  ) {
+  factory FavoriteArticlesPageScope.of(final BuildContext context) {
     return FavoriteArticlesPageScope(
       favoriteNewsArticleRepository: context.read(),
     );
@@ -27,7 +25,7 @@ class FavoriteArticlesPageScope extends ChangeNotifier {
 
   /// The subscription which listens to changes in favorite news articles.
   StreamSubscription<List<FavoriteNewsArticle>>?
-      _favoriteNewsArticleStreamSubscription;
+  _favoriteNewsArticleStreamSubscription;
 
   /// Whether the [FavoriteArticlesPageScope] is loading.
   bool get isLoading => _isLoading;
@@ -61,12 +59,13 @@ class FavoriteArticlesPageScope extends ChangeNotifier {
 
   /// Subscribes to favorite article changes
   void _initializeFavoriteNewsArticleStreamSubscription() {
-    _favoriteNewsArticleStreamSubscription =
-        _favoriteNewsArticleRepository.changes.listen((favoriteNewsArticles) {
-      _list = _getFavorites(favoriteNewsArticles);
+    _favoriteNewsArticleStreamSubscription = _favoriteNewsArticleRepository
+        .changes
+        .listen((favoriteNewsArticles) {
+          _list = _getFavorites(favoriteNewsArticles);
 
-      notifyListeners();
-    });
+          notifyListeners();
+        });
   }
 
   /// Returns whether the given [articleUrl] is marked as favorite.

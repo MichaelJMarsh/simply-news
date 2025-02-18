@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
-import 'package:simply_news/widgets/widgets.dart';
+import 'package:simply_news/presentation/widgets/widgets.dart';
 
 import 'article_overview_page_scope.dart';
 
@@ -13,10 +13,7 @@ import 'article_overview_page_scope.dart';
 /// the currently displayed news article.
 class ArticleOverviewPage extends StatefulWidget {
   /// Creates a new [ArticleOverviewPage].
-  const ArticleOverviewPage({
-    super.key,
-    required this.article,
-  });
+  const ArticleOverviewPage({super.key, required this.article});
 
   /// The news article to display.
   final NewsArticle article;
@@ -111,12 +108,12 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
     if (renderBox == null) return;
 
     final success = await context.read<Share>().send(
-          content: articleUrl,
-          sharePositionOrigin:
-              renderBox.localToGlobal(Offset.zero) & renderBox.size,
-          subject: 'Simply News',
-          message: 'Check out this article I found on Simply News!',
-        );
+      content: articleUrl,
+      sharePositionOrigin:
+          renderBox.localToGlobal(Offset.zero) & renderBox.size,
+      subject: 'Simply News',
+      message: 'Check out this article I found on Simply News!',
+    );
 
     if (!context.mounted) return;
 
@@ -138,10 +135,10 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ArticleOverviewPageScope.of(
-        context,
-        article: widget.article,
-      )..initialize(),
+      create:
+          (context) =>
+              ArticleOverviewPageScope.of(context, article: widget.article)
+                ..initialize(),
       builder: (context, _) {
         final article = context.watch<ArticleOverviewPageScope>();
         final articleUrl = article.url;
@@ -223,10 +220,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                       pixels: 32,
                       child: Text(
                         article.content,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          height: 24 / 16,
-                        ),
+                        style: const TextStyle(fontSize: 16, height: 24 / 16),
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -240,10 +234,11 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                               animation: _enterAnimations.readMoreButton,
                               pixels: 32,
                               child: ElevatedButton(
-                                onPressed: () => _openArticleUrl(
-                                  context,
-                                  url: article.url,
-                                ),
+                                onPressed:
+                                    () => _openArticleUrl(
+                                      context,
+                                      url: article.url,
+                                    ),
                                 child: const Text('READ MORE'),
                               ),
                             ),
@@ -256,10 +251,11 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                               child: Builder(
                                 builder: (context) {
                                   return ElevatedButton(
-                                    onPressed: () => _shareArticle(
-                                      context,
-                                      articleUrl: articleUrl,
-                                    ),
+                                    onPressed:
+                                        () => _shareArticle(
+                                          context,
+                                          articleUrl: articleUrl,
+                                        ),
                                     child: const Text('SHARE'),
                                   );
                                 },
@@ -310,42 +306,42 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
 /// The entrance animations for each item on the [ArticleOverviewPage].
 class _EnterAnimations {
   _EnterAnimations(this.controller)
-      : appBarButton = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.000, 0.250, curve: Curves.fastOutSlowIn),
-        ),
-        appBarTitle = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.025, 0.275, curve: Curves.fastOutSlowIn),
-        ),
-        articleTitle = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.100, 0.350, curve: Curves.fastOutSlowIn),
-        ),
-        articleAuthor = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.125, 0.375, curve: Curves.fastOutSlowIn),
-        ),
-        divider = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.150, 0.400, curve: Curves.fastOutSlowIn),
-        ),
-        articleContent = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.200, 0.450, curve: Curves.fastOutSlowIn),
-        ),
-        readMoreButton = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.250, 0.500, curve: Curves.fastOutSlowIn),
-        ),
-        shareButton = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.275, 0.525, curve: Curves.fastOutSlowIn),
-        ),
-        saveButton = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.350, 0.600, curve: Curves.fastOutSlowIn),
-        );
+    : appBarButton = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.000, 0.250, curve: Curves.fastOutSlowIn),
+      ),
+      appBarTitle = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.025, 0.275, curve: Curves.fastOutSlowIn),
+      ),
+      articleTitle = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.100, 0.350, curve: Curves.fastOutSlowIn),
+      ),
+      articleAuthor = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.125, 0.375, curve: Curves.fastOutSlowIn),
+      ),
+      divider = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.150, 0.400, curve: Curves.fastOutSlowIn),
+      ),
+      articleContent = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.200, 0.450, curve: Curves.fastOutSlowIn),
+      ),
+      readMoreButton = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.250, 0.500, curve: Curves.fastOutSlowIn),
+      ),
+      shareButton = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.275, 0.525, curve: Curves.fastOutSlowIn),
+      ),
+      saveButton = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.350, 0.600, curve: Curves.fastOutSlowIn),
+      );
 
   final AnimationController controller;
 

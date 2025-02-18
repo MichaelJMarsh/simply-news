@@ -5,13 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:simply_news/pages/favorites/favorite_articles_page_scope.dart';
+import 'package:simply_news/presentation/pages/favorites/favorite_articles_page_scope.dart';
 
 import 'favorite_articles_page_scope_test.mocks.dart';
 
-@GenerateNiceMocks([
-  MockSpec<FavoriteNewsArticleRepository>(),
-])
+@GenerateNiceMocks([MockSpec<FavoriteNewsArticleRepository>()])
 void main() {
   late MockFavoriteNewsArticleRepository mockFavoriteNewsArticleRepository;
   late FavoriteArticlesPageScope scope;
@@ -42,11 +40,12 @@ void main() {
   setUp(() {
     mockFavoriteNewsArticleRepository = MockFavoriteNewsArticleRepository();
 
-    when(mockFavoriteNewsArticleRepository.list()).thenAnswer(
-      (_) async => <FavoriteNewsArticle>[],
-    );
-    when(mockFavoriteNewsArticleRepository.changes)
-        .thenAnswer((_) => const Stream.empty());
+    when(
+      mockFavoriteNewsArticleRepository.list(),
+    ).thenAnswer((_) async => <FavoriteNewsArticle>[]);
+    when(
+      mockFavoriteNewsArticleRepository.changes,
+    ).thenAnswer((_) => const Stream.empty());
 
     scope = FavoriteArticlesPageScope(
       favoriteNewsArticleRepository: mockFavoriteNewsArticleRepository,
@@ -59,37 +58,36 @@ void main() {
 
   group('FavoriteArticlesPageScope', () {
     test(
-        'initialize() loads favorites, sets isLoading = false, notifies listeners',
-        () async {
-      bool didNotify = false;
-      scope.addListener(() {
-        didNotify = true;
-      });
+      'initialize() loads favorites, sets isLoading = false, notifies listeners',
+      () async {
+        bool didNotify = false;
+        scope.addListener(() {
+          didNotify = true;
+        });
 
-      when(mockFavoriteNewsArticleRepository.list()).thenAnswer(
-        (_) async => [
-          favoriteNewsArticle1,
-          favoriteNewsArticle2,
-        ],
-      );
+        when(
+          mockFavoriteNewsArticleRepository.list(),
+        ).thenAnswer((_) async => [favoriteNewsArticle1, favoriteNewsArticle2]);
 
-      await scope.initialize();
+        await scope.initialize();
 
-      // Verify the state.
-      expect(scope.isLoading, isFalse);
-      expect(scope.list, [sampleArticle1, sampleArticle2]);
-      expect(scope.count, 2);
+        // Verify the state.
+        expect(scope.isLoading, isFalse);
+        expect(scope.list, [sampleArticle1, sampleArticle2]);
+        expect(scope.count, 2);
 
-      // Verify that notifyListeners was called.
-      expect(didNotify, isTrue);
-    });
+        // Verify that notifyListeners was called.
+        expect(didNotify, isTrue);
+      },
+    );
 
     test('count returns the size of loaded favorite articles', () async {
       // Verify that count is 0 initially.
       expect(scope.count, 0);
 
-      when(mockFavoriteNewsArticleRepository.list())
-          .thenAnswer((_) async => [favoriteNewsArticle1]);
+      when(
+        mockFavoriteNewsArticleRepository.list(),
+      ).thenAnswer((_) async => [favoriteNewsArticle1]);
 
       await scope.initialize();
 
@@ -106,9 +104,9 @@ void main() {
       });
 
       test('returns true if article is in the list', () async {
-        when(mockFavoriteNewsArticleRepository.list()).thenAnswer(
-          (_) async => [favoriteNewsArticle1],
-        );
+        when(
+          mockFavoriteNewsArticleRepository.list(),
+        ).thenAnswer((_) async => [favoriteNewsArticle1]);
 
         await scope.initialize();
 
@@ -118,25 +116,25 @@ void main() {
     });
 
     test(
-        'removeFavorite calls repository.delete(article) and removes it from the list',
-        () async {
-      when(mockFavoriteNewsArticleRepository.list()).thenAnswer(
-        (_) async => [
-          favoriteNewsArticle1,
-          favoriteNewsArticle2,
-        ],
-      );
+      'removeFavorite calls repository.delete(article) and removes it from the list',
+      () async {
+        when(
+          mockFavoriteNewsArticleRepository.list(),
+        ).thenAnswer((_) async => [favoriteNewsArticle1, favoriteNewsArticle2]);
 
-      await scope.initialize();
-      expect(scope.list, [sampleArticle1, sampleArticle2]);
+        await scope.initialize();
+        expect(scope.list, [sampleArticle1, sampleArticle2]);
 
-      when(mockFavoriteNewsArticleRepository.delete(sampleArticle1))
-          .thenAnswer((_) => Future.value());
+        when(
+          mockFavoriteNewsArticleRepository.delete(sampleArticle1),
+        ).thenAnswer((_) => Future.value());
 
-      await scope.removeFavorite(sampleArticle1);
+        await scope.removeFavorite(sampleArticle1);
 
-      verify(mockFavoriteNewsArticleRepository.delete(sampleArticle1))
-          .called(1);
-    });
+        verify(
+          mockFavoriteNewsArticleRepository.delete(sampleArticle1),
+        ).called(1);
+      },
+    );
   });
 }

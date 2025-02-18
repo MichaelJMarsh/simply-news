@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
 
-import 'runner.dart';
+import 'launcher.dart';
 
-void main() => runApp(const Runner());
+void main() => runApp(const Launcher());
