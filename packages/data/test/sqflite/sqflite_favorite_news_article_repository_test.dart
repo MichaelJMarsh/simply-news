@@ -29,8 +29,9 @@ void main() {
     });
 
     test('insert -> get -> delete -> get returns null', () async {
-      final repository =
-          SqfliteFavoriteNewsArticleRepository(database.instance);
+      final repository = SqfliteFavoriteNewsArticleRepository(
+        database.instance,
+      );
 
       const article = NewsArticle(
         url: 'https://example.com/my-article',
@@ -54,8 +55,9 @@ void main() {
     });
 
     test('list favorites in descending order by insertion time', () async {
-      final repository =
-          SqfliteFavoriteNewsArticleRepository(database.instance);
+      final repository = SqfliteFavoriteNewsArticleRepository(
+        database.instance,
+      );
 
       final favorites = [
         FavoriteNewsArticle(

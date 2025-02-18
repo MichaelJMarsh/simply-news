@@ -6,13 +6,12 @@ import 'package:http/http.dart' as http;
 const _defaultPage = 1;
 const _defaultPageSize = 10;
 
+/// A client for fetching news articles from the News API.
 class NewsArticleClient implements NewsArticleService {
   /// Creates a new instance of [NewsArticleClient].
-  NewsArticleClient({
-    required String apiKey,
-    http.Client? client,
-  })  : _apiKey = apiKey,
-        _client = client ?? http.Client();
+  NewsArticleClient({required String apiKey, http.Client? client})
+    : _apiKey = apiKey,
+      _client = client ?? http.Client();
 
   final String _apiKey;
   final http.Client _client;
@@ -80,9 +79,10 @@ class NewsArticleClient implements NewsArticleService {
     }
 
     final articlesJson = data['articles'] as List;
-    final articles = articlesJson
-        .map((json) => NewsArticle.fromJson(json as Map<String, dynamic>))
-        .toList();
+    final articles =
+        articlesJson
+            .map((json) => NewsArticle.fromJson(json as Map<String, dynamic>))
+            .toList();
 
     final totalResults = data['totalResults'] as int? ?? articles.length;
 

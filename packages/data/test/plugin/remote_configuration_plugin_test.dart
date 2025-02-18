@@ -33,9 +33,9 @@ void main() {
 
       await plugin.initialize();
 
-      final captured = verify(mockRemoteConfig.setConfigSettings(captureAny))
-          .captured
-          .single as RemoteConfigSettings;
+      final captured =
+          verify(mockRemoteConfig.setConfigSettings(captureAny)).captured.single
+              as RemoteConfigSettings;
 
       // Verify that the settings were set correctly.
       expect(captured.fetchTimeout, equals(const Duration(seconds: 10)));

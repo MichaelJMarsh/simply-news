@@ -4,14 +4,11 @@ import 'package:collection/collection.dart';
 
 import 'news_article.dart';
 
-/// A class that represents a collection of news articles and the total result count.
+/// A class that represents the result of a search query.
 @immutable
 class SearchResult {
   /// Creates a new [SearchResult].
-  const SearchResult({
-    required this.articles,
-    required this.totalResults,
-  });
+  const SearchResult({required this.articles, required this.totalResults});
 
   /// The list of news articles.
   final List<NewsArticle> articles;
@@ -35,13 +32,4 @@ class SearchResult {
         const ListEquality().hash(articles) ^
         totalResults.hashCode;
   }
-}
-
-/// Contains the field names of the [SearchResult].
-@immutable
-abstract class SearchResultField {
-  const SearchResultField._();
-
-  static const articles = 'articles';
-  static const totalResults = 'totalResults';
 }

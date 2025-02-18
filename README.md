@@ -45,8 +45,8 @@ README.md             # Documentation
 
 ## Prerequisites
 
-- Flutter SDK (version 3.27.4)
-- Dart (included with Flutter)
+- Flutter SDK **version 3.29.0**
+- Dart **version 3.7.0** (included with Flutter)
 - Android Studio or Xcode (for emulators/simulators)
 - NewsAPI.org API key (store securely in real-world scenarios)
 

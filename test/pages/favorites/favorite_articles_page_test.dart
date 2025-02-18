@@ -8,15 +8,13 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import 'package:simply_news/pages/article_overview/article_overview_page.dart';
-import 'package:simply_news/pages/favorites/favorite_articles_page.dart';
-import 'package:simply_news/widgets/widgets.dart';
+import 'package:simply_news/presentation/pages/article_overview/article_overview_page.dart';
+import 'package:simply_news/presentation/pages/favorites/favorite_articles_page.dart';
+import 'package:simply_news/presentation/widgets/widgets.dart';
 
 import 'favorite_articles_page_test.mocks.dart';
 
-@GenerateNiceMocks([
-  MockSpec<FavoriteNewsArticleRepository>(),
-])
+@GenerateNiceMocks([MockSpec<FavoriteNewsArticleRepository>()])
 void main() {
   late FavoriteNewsArticleRepository mockRepository;
 
@@ -25,9 +23,7 @@ void main() {
     await tester.pumpWidget(
       Provider.value(
         value: mockRepository,
-        child: const MaterialApp(
-          home: FavoriteArticlesPage(),
-        ),
+        child: const MaterialApp(home: FavoriteArticlesPage()),
       ),
     );
   }
@@ -43,121 +39,110 @@ void main() {
     reset(mockRepository);
   });
 
-  testWidgets(
-    'shows a loading indicator while loading',
-    (WidgetTester tester) async {
-      when(mockRepository.list()).thenAnswer((_) async {
-        return Future.delayed(const Duration(seconds: 1), () => []);
-      });
-      when(mockRepository.changes).thenAnswer((_) => Stream.value([]));
+  testWidgets('shows a loading indicator while loading', (
+    WidgetTester tester,
+  ) async {
+    when(mockRepository.list()).thenAnswer((_) async {
+      return Future.delayed(const Duration(seconds: 1), () => []);
+    });
+    when(mockRepository.changes).thenAnswer((_) => Stream.value([]));
 
-      await pumpFavoriteArticlesPage(tester);
+    await pumpFavoriteArticlesPage(tester);
 
-      // Verify that the loading layout is displayed.
-      expect(find.byType(LoadingLayout), findsOneWidget);
+    // Verify that the loading layout is displayed.
+    expect(find.byType(LoadingLayout), findsOneWidget);
 
-      // Allow the loading process to complete.
-      await tester.pumpAndSettle();
+    // Allow the loading process to complete.
+    await tester.pumpAndSettle();
 
-      // Verify that the loading layout is no longer displayed.
-      expect(find.byType(LoadingLayout), findsNothing);
-      expect(find.byKey(const Key('empty_favorites_state')), findsOneWidget);
-    },
-  );
+    // Verify that the loading layout is no longer displayed.
+    expect(find.byType(LoadingLayout), findsNothing);
+    expect(find.byKey(const Key('empty_favorites_state')), findsOneWidget);
+  });
 
-  testWidgets(
-    'shows empty favorites state when no favorites exist',
-    (WidgetTester tester) async {
-      when(mockRepository.list()).thenAnswer((_) async => []);
-      when(mockRepository.changes).thenAnswer((_) => Stream.value([]));
+  testWidgets('shows empty favorites state when no favorites exist', (
+    WidgetTester tester,
+  ) async {
+    when(mockRepository.list()).thenAnswer((_) async => []);
+    when(mockRepository.changes).thenAnswer((_) => Stream.value([]));
 
-      await pumpFavoriteArticlesPage(tester);
-      await tester.pumpAndSettle();
+    await pumpFavoriteArticlesPage(tester);
+    await tester.pumpAndSettle();
 
-      // Verify that the loading layout is not displayed.
-      expect(find.byType(LoadingLayout), findsNothing);
+    // Verify that the loading layout is not displayed.
+    expect(find.byType(LoadingLayout), findsNothing);
 
-      // Verify that the empty favorites state is displayed.
-      expect(find.byKey(const Key('empty_favorites_state')), findsOneWidget);
-      expect(
-        find.text('You have not favorited any articles.'),
-        findsOneWidget,
-      );
-    },
-  );
+    // Verify that the empty favorites state is displayed.
+    expect(find.byKey(const Key('empty_favorites_state')), findsOneWidget);
+    expect(find.text('You have not favorited any articles.'), findsOneWidget);
+  });
 
-  testWidgets(
-    'displays favorite articles when available',
-    (WidgetTester tester) async {
-      final favoriteNewsArticle = FavoriteNewsArticle(
-        article: const NewsArticle(
-          title: 'My Favorite Article',
-          author: 'Test Author',
-          content: 'Some content...',
-          url: 'https://example.com/my-favorite',
-        ),
-        insertionTime: DateTime.now(),
-      );
+  testWidgets('displays favorite articles when available', (
+    WidgetTester tester,
+  ) async {
+    final favoriteNewsArticle = FavoriteNewsArticle(
+      article: const NewsArticle(
+        title: 'My Favorite Article',
+        author: 'Test Author',
+        content: 'Some content...',
+        url: 'https://example.com/my-favorite',
+      ),
+      insertionTime: DateTime.now(),
+    );
 
-      when(mockRepository.list()).thenAnswer(
-        (_) async => [favoriteNewsArticle],
-      );
-      when(mockRepository.changes).thenAnswer(
-        (_) => Stream.value([favoriteNewsArticle]),
-      );
+    when(mockRepository.list()).thenAnswer((_) async => [favoriteNewsArticle]);
+    when(
+      mockRepository.changes,
+    ).thenAnswer((_) => Stream.value([favoriteNewsArticle]));
 
-      await pumpFavoriteArticlesPage(tester);
-      await tester.pumpAndSettle();
+    await pumpFavoriteArticlesPage(tester);
+    await tester.pumpAndSettle();
 
-      // Verify that the loading layout is not displayed.
-      expect(find.byType(LoadingLayout), findsNothing);
-      expect(find.byKey(const Key('empty_favorites_state')), findsNothing);
+    // Verify that the loading layout is not displayed.
+    expect(find.byType(LoadingLayout), findsNothing);
+    expect(find.byKey(const Key('empty_favorites_state')), findsNothing);
 
-      // Verify that the favorite article is displayed.
-      expect(find.byType(NewsArticleCard), findsOneWidget);
-      expect(find.text('My Favorite Article'), findsOneWidget);
-    },
-  );
+    // Verify that the favorite article is displayed.
+    expect(find.byType(NewsArticleCard), findsOneWidget);
+    expect(find.text('My Favorite Article'), findsOneWidget);
+  });
 
-  testWidgets(
-    'removes a favorite when tapping the "favorite" icon',
-    (WidgetTester tester) async {
-      final favoriteNewsArticle = FavoriteNewsArticle(
-        article: const NewsArticle(
-          title: 'Removable Article',
-          author: 'Test Author',
-          content: 'Some content...',
-          url: 'https://example.com/remove-me',
-        ),
-        insertionTime: DateTime.now(),
-      );
+  testWidgets('removes a favorite when tapping the "favorite" icon', (
+    WidgetTester tester,
+  ) async {
+    final favoriteNewsArticle = FavoriteNewsArticle(
+      article: const NewsArticle(
+        title: 'Removable Article',
+        author: 'Test Author',
+        content: 'Some content...',
+        url: 'https://example.com/remove-me',
+      ),
+      insertionTime: DateTime.now(),
+    );
 
-      when(mockRepository.list()).thenAnswer(
-        (_) async => [favoriteNewsArticle],
-      );
-      when(mockRepository.changes).thenAnswer(
-        (_) => Stream.value([favoriteNewsArticle]),
-      );
+    when(mockRepository.list()).thenAnswer((_) async => [favoriteNewsArticle]);
+    when(
+      mockRepository.changes,
+    ).thenAnswer((_) => Stream.value([favoriteNewsArticle]));
 
-      await pumpFavoriteArticlesPage(tester);
-      await tester.pumpAndSettle();
+    await pumpFavoriteArticlesPage(tester);
+    await tester.pumpAndSettle();
 
-      final cardFinder = find.byType(NewsArticleCard);
-      expect(cardFinder, findsOneWidget);
+    final cardFinder = find.byType(NewsArticleCard);
+    expect(cardFinder, findsOneWidget);
 
-      final favoriteIconFinder = find.descendant(
-        of: cardFinder,
-        matching: find.byIcon(Icons.favorite),
-      );
-      expect(favoriteIconFinder, findsOneWidget);
+    final favoriteIconFinder = find.descendant(
+      of: cardFinder,
+      matching: find.byIcon(Icons.favorite),
+    );
+    expect(favoriteIconFinder, findsOneWidget);
 
-      await tester.tap(favoriteIconFinder);
-      await tester.pumpAndSettle();
+    await tester.tap(favoriteIconFinder);
+    await tester.pumpAndSettle();
 
-      // Verify that the favorite article was removed.
-      verify(mockRepository.delete(favoriteNewsArticle.article)).called(1);
-    },
-  );
+    // Verify that the favorite article was removed.
+    verify(mockRepository.delete(favoriteNewsArticle.article)).called(1);
+  });
 
   testWidgets(
     'navigates to ArticleOverviewPage when tapping a favorite article',
@@ -172,12 +157,12 @@ void main() {
         insertionTime: DateTime.now(),
       );
 
-      when(mockRepository.list()).thenAnswer(
-        (_) async => [favoriteNewsArticle],
-      );
-      when(mockRepository.changes).thenAnswer(
-        (_) => Stream.value([favoriteNewsArticle]),
-      );
+      when(
+        mockRepository.list(),
+      ).thenAnswer((_) async => [favoriteNewsArticle]);
+      when(
+        mockRepository.changes,
+      ).thenAnswer((_) => Stream.value([favoriteNewsArticle]));
 
       await pumpFavoriteArticlesPage(tester);
       await tester.pumpAndSettle();
@@ -190,10 +175,7 @@ void main() {
 
       // Verify that the ArticleOverviewPage is displayed.
       expect(find.byType(ArticleOverviewPage), findsOneWidget);
-      expect(
-        find.text('Navigation Test Article'),
-        findsOneWidget,
-      );
+      expect(find.text('Navigation Test Article'), findsOneWidget);
     },
   );
 }

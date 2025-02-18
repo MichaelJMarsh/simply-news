@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
-import 'app_theme.dart';
-import 'pages/dashboard/dashboard_page.dart';
+import 'config/app_theme.dart';
+import 'presentation/pages/dashboard/dashboard_page.dart';
 
 /// Manages the core functionalities of SimplyNews.
 ///
@@ -60,13 +60,12 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
         );
 
         return MediaQuery(
-          data: mediaQuery.copyWith(
-            textScaler: TextScaler.noScaling,
-          ),
+          data: mediaQuery.copyWith(textScaler: TextScaler.noScaling),
           child: AnnotatedRegion<SystemUiOverlayStyle>(
-            value: theme.colorScheme.brightness == Brightness.dark
-                ? SystemUiOverlayStyle.light
-                : SystemUiOverlayStyle.dark,
+            value:
+                theme.colorScheme.brightness == Brightness.dark
+                    ? SystemUiOverlayStyle.light
+                    : SystemUiOverlayStyle.dark,
             child: DefaultTextStyle(
               style: TextStyle(
                 fontSize: 16,

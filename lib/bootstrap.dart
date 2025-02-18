@@ -8,41 +8,51 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
 import 'app.dart';
-import 'firebase_options.dart';
+import 'config/firebase_options.dart';
 
-/// Initializes the database and other services, then returns the
-/// created [SimplyNewsApp].
-Future<SimplyNewsApp> bootstrap() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+/// The entry point for the SimplyNews application.
+///
+/// Initializes the database and other services, then launches the [SimplyNewsApp].
+class Bootstrap {
+  const Bootstrap._();
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  /// Initializes the database and other services, then returns the
+  /// created [SimplyNewsApp].
+  static Future<SimplyNewsApp> initializeApp() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  final database = SqfliteDatabase(path: await _getDatabasePath());
-  await database.open();
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  final remoteConfig = RemoteConfigurationPlugin(
-    remoteConfig: FirebaseRemoteConfig.instance,
-  );
+    final database = SqfliteDatabase(path: await _getDatabasePath());
+    await database.open();
 
-  await remoteConfig.initialize();
+    final remoteConfig = RemoteConfigurationPlugin(
+      remoteConfig: FirebaseRemoteConfig.instance,
+    );
 
-  return SimplyNewsApp(
-    database: database,
-    share: SharePlugin(delegate: ShareDelegate()),
-    urlLauncher: UrlLauncherPlugin(delegate: UrlLauncherDelegate()),
-    favoriteNewsArticleRepository:
-        SqfliteFavoriteNewsArticleRepository(database.instance),
-    newsArticleService: NewsArticleClient(apiKey: remoteConfig.newsApiKey),
-  );
-}
+    await remoteConfig.initialize();
 
-/// Returns the absolute local database path.
-Future<String> _getDatabasePath() async {
-  /// The database filename without directory path.
-  const databaseFilename = 'simply_news.db';
+    return SimplyNewsApp(
+      database: database,
+      share: SharePlugin(delegate: ShareDelegate()),
+      urlLauncher: UrlLauncherPlugin(delegate: UrlLauncherDelegate()),
+      favoriteNewsArticleRepository: SqfliteFavoriteNewsArticleRepository(
+        database.instance,
+      ),
+      newsArticleService: NewsArticleClient(apiKey: remoteConfig.newsApiKey),
+    );
+  }
 
-  final path = await sqflite.getDatabasesPath();
+  /// Returns the absolute local database path.
+  static Future<String> _getDatabasePath() async {
+    // The database filename without directory path.
+    const databaseFilename = 'simply_news.db';
 
-  return join(path, databaseFilename);
+    final path = await sqflite.getDatabasesPath();
+
+    return join(path, databaseFilename);
+  }
 }

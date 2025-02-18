@@ -2,35 +2,26 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:simply_news/widgets/src/loading_indicator.dart';
+import 'package:simply_news/presentation/widgets/src/loading_indicator.dart';
 
 void main() {
   group('LoadingIndicator', () {
-    testWidgets(
-      'renders a CircularProgressIndicator',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          const MaterialApp(
-            home: Scaffold(
-              body: LoadingIndicator(),
-            ),
-          ),
-        );
+    testWidgets('renders a CircularProgressIndicator', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(home: Scaffold(body: LoadingIndicator())),
+      );
 
-        // Verify that a CircularProgressIndicator is rendered.
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      },
-    );
+      // Verify that a CircularProgressIndicator is rendered.
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    });
 
     testWidgets(
       'CircularProgressIndicator has correct strokeCap and strokeWidth',
       (WidgetTester tester) async {
         await tester.pumpWidget(
-          const MaterialApp(
-            home: Scaffold(
-              body: LoadingIndicator(),
-            ),
-          ),
+          const MaterialApp(home: Scaffold(body: LoadingIndicator())),
         );
 
         // Find the CircularProgressIndicator widget.
@@ -38,8 +29,8 @@ void main() {
         expect(finder, findsOneWidget);
 
         // Extract the widget and verify its properties.
-        final CircularProgressIndicator progressIndicator =
-            tester.widget<CircularProgressIndicator>(finder);
+        final CircularProgressIndicator progressIndicator = tester
+            .widget<CircularProgressIndicator>(finder);
 
         // Verify that the CircularProgressIndicator has the correct properties.
         expect(progressIndicator.strokeCap, equals(StrokeCap.round));

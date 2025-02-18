@@ -1,8 +1,10 @@
-/// A utility to launch a URL via the system's native URL launcher.
+/// The interface for launching URLs via the system's native URL launcher.
 abstract class UrlLauncher {
   const UrlLauncher._();
 
-  Future<bool> launch(String url);
-
+  /// Checks if the URL can be launched.
   Future<bool> canLaunch(String url);
+
+  /// Launches the given [url].
+  Future<bool> launch(String url);
 }
