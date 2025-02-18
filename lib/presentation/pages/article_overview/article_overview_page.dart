@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
+import 'package:simply_news/presentation/animations/entrance_animations.dart';
 import 'package:simply_news/presentation/widgets/widgets.dart';
 
 import 'article_overview_page_scope.dart';
@@ -24,14 +25,14 @@ class ArticleOverviewPage extends StatefulWidget {
 
 class _ArticleOverviewPageState extends State<ArticleOverviewPage>
     with SingleTickerProviderStateMixin {
-  /// The controller which manages the enter animations.
-  late final AnimationController _enterAnimationsController;
+  /// The controller which manages the entrance animations.
+  late final AnimationController _entranceAnimationsController;
 
-  /// The enter animations for the [ArticleOverviewPage].
-  late final _EnterAnimations _enterAnimations;
+  /// The entrance animations for the [ArticleOverviewPage].
+  late final _EntranceAnimations _entranceAnimations;
 
-  /// Timer to start the enter animation.
-  late final Timer _enterAnimationsStartTimer;
+  /// Timer to start the entrance animation.
+  late final Timer _entranceAnimationsStartTimer;
 
   /// The state of the [ScaffoldMessenger] to show snack bars.
   ScaffoldMessengerState? _scaffoldMessenger;
@@ -40,16 +41,18 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
   void initState() {
     super.initState();
 
-    _enterAnimationsController = AnimationController(
+    _entranceAnimationsController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     );
 
-    _enterAnimations = _EnterAnimations(_enterAnimationsController);
+    _entranceAnimations = _EntranceAnimations(
+      controller: _entranceAnimationsController,
+    );
 
-    _enterAnimationsStartTimer = Timer(
+    _entranceAnimationsStartTimer = Timer(
       const Duration(milliseconds: 200),
-      _enterAnimationsController.forward,
+      _entranceAnimationsController.forward,
     );
   }
 
@@ -62,8 +65,8 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
 
   @override
   void dispose() {
-    _enterAnimationsStartTimer.cancel();
-    _enterAnimationsController.dispose();
+    _entranceAnimationsStartTimer.cancel();
+    _entranceAnimationsController.dispose();
 
     _scaffoldMessenger = null;
 
@@ -149,12 +152,12 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
           appBar: AppBar(
             clipBehavior: Clip.none,
             title: AnimatedTranslation.vertical(
-              animation: _enterAnimations.appBarTitle,
+              animation: _entranceAnimations.appBarTitle,
               pixels: 32,
               child: const Text('Article Overview'),
             ),
             leading: AnimatedTranslation.horizontal(
-              animation: _enterAnimations.appBarButton,
+              animation: _entranceAnimations.appBarButton,
               pixels: -24,
               child: Padding(
                 padding: const EdgeInsets.only(left: 16),
@@ -166,7 +169,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
             ),
             actions: [
               AnimatedTranslation.horizontal(
-                animation: _enterAnimations.appBarButton,
+                animation: _entranceAnimations.appBarButton,
                 pixels: 24,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 16),
@@ -187,7 +190,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                   children: [
                     const SizedBox(height: 32),
                     AnimatedTranslation.vertical(
-                      animation: _enterAnimations.articleTitle,
+                      animation: _entranceAnimations.articleTitle,
                       pixels: 32,
                       child: Text(
                         article.title,
@@ -201,13 +204,13 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                     ),
                     const SizedBox(height: 8),
                     AnimatedTranslation.vertical(
-                      animation: _enterAnimations.articleAuthor,
+                      animation: _entranceAnimations.articleAuthor,
                       pixels: 32,
                       child: Text(article.author),
                     ),
                     const SizedBox(height: 16),
                     AnimatedTranslation.vertical(
-                      animation: _enterAnimations.divider,
+                      animation: _entranceAnimations.divider,
                       pixels: 32,
                       child: const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 24),
@@ -216,7 +219,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                     ),
                     const SizedBox(height: 24),
                     AnimatedTranslation.vertical(
-                      animation: _enterAnimations.articleContent,
+                      animation: _entranceAnimations.articleContent,
                       pixels: 32,
                       child: Text(
                         article.content,
@@ -231,7 +234,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                         children: [
                           Expanded(
                             child: AnimatedTranslation.vertical(
-                              animation: _enterAnimations.readMoreButton,
+                              animation: _entranceAnimations.readMoreButton,
                               pixels: 32,
                               child: ElevatedButton(
                                 onPressed:
@@ -246,7 +249,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
                           const SizedBox(width: 16),
                           Expanded(
                             child: AnimatedTranslation.vertical(
-                              animation: _enterAnimations.shareButton,
+                              animation: _entranceAnimations.shareButton,
                               pixels: 32,
                               child: Builder(
                                 builder: (context) {
@@ -273,7 +276,7 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: AnimatedTranslation.vertical(
-            animation: _enterAnimations.saveButton,
+            animation: _entranceAnimations.saveButton,
             pixels: 32,
             child: FloatingActionButton.extended(
               onPressed: article.toggleFavorite,
@@ -304,57 +307,17 @@ class _ArticleOverviewPageState extends State<ArticleOverviewPage>
 }
 
 /// The entrance animations for each item on the [ArticleOverviewPage].
-class _EnterAnimations {
-  _EnterAnimations(this.controller)
-    : appBarButton = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.000, 0.250, curve: Curves.fastOutSlowIn),
-      ),
-      appBarTitle = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.025, 0.275, curve: Curves.fastOutSlowIn),
-      ),
-      articleTitle = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.100, 0.350, curve: Curves.fastOutSlowIn),
-      ),
-      articleAuthor = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.125, 0.375, curve: Curves.fastOutSlowIn),
-      ),
-      divider = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.150, 0.400, curve: Curves.fastOutSlowIn),
-      ),
-      articleContent = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.200, 0.450, curve: Curves.fastOutSlowIn),
-      ),
-      readMoreButton = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.250, 0.500, curve: Curves.fastOutSlowIn),
-      ),
-      shareButton = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.275, 0.525, curve: Curves.fastOutSlowIn),
-      ),
-      saveButton = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.350, 0.600, curve: Curves.fastOutSlowIn),
-      );
+class _EntranceAnimations extends EntranceAnimations {
+  /// Creates a new [_EntranceAnimations]
+  const _EntranceAnimations({required super.controller});
 
-  final AnimationController controller;
-
-  final Animation<double> appBarButton;
-  final Animation<double> appBarTitle;
-
-  final Animation<double> articleTitle;
-  final Animation<double> articleAuthor;
-  final Animation<double> divider;
-  final Animation<double> articleContent;
-
-  final Animation<double> readMoreButton;
-  final Animation<double> shareButton;
-
-  final Animation<double> saveButton;
+  Animation<double> get appBarButton => curvedAnimation(0.000, 0.250);
+  Animation<double> get appBarTitle => curvedAnimation(0.025, 0.275);
+  Animation<double> get articleTitle => curvedAnimation(0.100, 0.350);
+  Animation<double> get articleAuthor => curvedAnimation(0.125, 0.375);
+  Animation<double> get divider => curvedAnimation(0.150, 0.400);
+  Animation<double> get articleContent => curvedAnimation(0.200, 0.450);
+  Animation<double> get readMoreButton => curvedAnimation(0.250, 0.500);
+  Animation<double> get shareButton => curvedAnimation(0.275, 0.525);
+  Animation<double> get saveButton => curvedAnimation(0.350, 0.600);
 }

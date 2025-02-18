@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
+import 'package:simply_news/presentation/animations/entrance_animations.dart';
 
 import 'package:simply_news/presentation/pages/article_overview/article_overview_page.dart';
 import 'package:simply_news/presentation/pages/favorites/favorite_articles_page.dart';
@@ -44,14 +45,14 @@ class _Layout extends StatefulWidget {
 }
 
 class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
-  /// The controller which manages the enter animations.
-  late final AnimationController _enterAnimationsController;
+  /// The controller which manages the entrance animations.
+  late final AnimationController _entranceAnimationsController;
 
-  /// The enter animations for the [DashboardPage].
-  late final _EnterAnimations _enterAnimations;
+  /// The entrance animations for the [DashboardPage].
+  late final _EntranceAnimations _entranceAnimations;
 
-  /// Timer to start the enter animation.
-  late final Timer _enterAnimationsStartTimer;
+  /// Timer to start the entrance animation.
+  late final Timer _entranceAnimationsStartTimer;
 
   /// Scroll controller used for pagination.
   final _scrollController = ScrollController();
@@ -63,16 +64,18 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _enterAnimationsController = AnimationController(
+    _entranceAnimationsController = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
     );
 
-    _enterAnimations = _EnterAnimations(_enterAnimationsController);
+    _entranceAnimations = _EntranceAnimations(
+      controller: _entranceAnimationsController,
+    );
 
-    _enterAnimationsStartTimer = Timer(
+    _entranceAnimationsStartTimer = Timer(
       const Duration(milliseconds: 200),
-      _enterAnimationsController.forward,
+      _entranceAnimationsController.forward,
     );
 
     // Listen for scroll events to trigger loading more articles.
@@ -81,8 +84,8 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    _enterAnimationsStartTimer.cancel();
-    _enterAnimationsController.dispose();
+    _entranceAnimationsStartTimer.cancel();
+    _entranceAnimationsController.dispose();
 
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
@@ -160,7 +163,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                 final newsArticle = dashboard.newsArticles[index];
 
                 return AnimatedTranslation.vertical(
-                  animation: _enterAnimations.body,
+                  animation: _entranceAnimations.body,
                   pixels: 32,
                   child: NewsArticleCard(
                     article: newsArticle,
@@ -238,7 +241,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
     if (isLoading) {
       body = AnimatedTranslation.vertical(
         key: Key('loading_indicator.${isLoading ? 'visible' : 'hidden'}'),
-        animation: _enterAnimations.body,
+        animation: _entranceAnimations.body,
         pixels: 32,
         child: Padding(
           padding: EdgeInsets.only(bottom: headerHeight),
@@ -250,7 +253,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
     } else if (newArticlesIsEmpty) {
       body = AnimatedTranslation.vertical(
         key: const Key('empty_search_state'),
-        animation: _enterAnimations.body,
+        animation: _entranceAnimations.body,
         pixels: 32,
         child: Center(
           child: Padding(
@@ -304,7 +307,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       AnimatedTranslation.vertical(
-                        animation: _enterAnimations.appBarTitle,
+                        animation: _entranceAnimations.appBarTitle,
                         pixels: 32,
                         child: DropdownButton(
                           value:
@@ -332,7 +335,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                         ),
                       ),
                       AnimatedTranslation.horizontal(
-                        animation: _enterAnimations.appBarButton,
+                        animation: _entranceAnimations.appBarButton,
                         pixels: 24,
                         child: IconButton(
                           onPressed: () => _openFavoritesArticles(context),
@@ -348,7 +351,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(searchBarHeight),
               child: AnimatedTranslation.vertical(
-                animation: _enterAnimations.searchBar,
+                animation: _entranceAnimations.searchBar,
                 pixels: 32,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -379,31 +382,12 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
 }
 
 /// The entrance animations for each item on the [DashboardPage].
-class _EnterAnimations {
-  _EnterAnimations(this.controller)
-    : appBarButton = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0, 0.500, curve: Curves.fastOutSlowIn),
-      ),
-      appBarTitle = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.050, 0.550, curve: Curves.fastOutSlowIn),
-      ),
-      searchBar = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.200, 0.700, curve: Curves.fastOutSlowIn),
-      ),
-      body = CurvedAnimation(
-        parent: controller,
-        curve: const Interval(0.300, 0.800, curve: Curves.fastOutSlowIn),
-      );
+class _EntranceAnimations extends EntranceAnimations {
+  /// Creates a new [_EntranceAnimations].
+  const _EntranceAnimations({required super.controller});
 
-  final AnimationController controller;
-
-  final Animation<double> appBarButton;
-  final Animation<double> appBarTitle;
-
-  final Animation<double> searchBar;
-
-  final Animation<double> body;
+  Animation<double> get appBarButton => curvedAnimation(0.000, 0.500);
+  Animation<double> get appBarTitle => curvedAnimation(0.050, 0.550);
+  Animation<double> get searchBar => curvedAnimation(0.200, 0.700);
+  Animation<double> get body => curvedAnimation(0.300, 0.800);
 }

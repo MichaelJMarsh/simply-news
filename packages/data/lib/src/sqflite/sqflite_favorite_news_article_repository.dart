@@ -16,6 +16,7 @@ class SqfliteFavoriteNewsArticleRepository
   /// The name of the [SqfliteFavoriteNewsArticleRepository] table.
   static const tableName = 'favorite_news_articles';
 
+  /// The current list of favorite news articles.
   var _favoriteNewsArticles = <FavoriteNewsArticle>[];
 
   @override
