@@ -1,3 +1,4 @@
+/// The interface for retrieving remote configuration values.
 abstract class RemoteConfigurationService {
   const RemoteConfigurationService._();
 

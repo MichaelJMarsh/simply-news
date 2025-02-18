@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:simply_news/app_theme.dart';
+import 'package:simply_news/config/app_theme.dart';
 
 void main() {
   group('AppTheme', () {
@@ -19,19 +19,21 @@ void main() {
     });
 
     test('lightTheme has correct primary color based on seed color', () {
-      final expectedPrimary = ColorScheme.fromSeed(
-        seedColor: AppTheme.primaryColor,
-        brightness: Brightness.light,
-      ).primary;
+      final expectedPrimary =
+          ColorScheme.fromSeed(
+            seedColor: AppTheme.primaryColor,
+            brightness: Brightness.light,
+          ).primary;
 
       expect(AppTheme.lightTheme.colorScheme.primary, equals(expectedPrimary));
     });
 
     test('darkTheme has correct primary color based on seed color', () {
-      final expectedPrimary = ColorScheme.fromSeed(
-        seedColor: AppTheme.primaryColor,
-        brightness: Brightness.dark,
-      ).primary;
+      final expectedPrimary =
+          ColorScheme.fromSeed(
+            seedColor: AppTheme.primaryColor,
+            brightness: Brightness.dark,
+          ).primary;
 
       expect(AppTheme.darkTheme.colorScheme.primary, equals(expectedPrimary));
     });

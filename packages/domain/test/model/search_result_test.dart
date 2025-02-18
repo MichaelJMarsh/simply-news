@@ -59,10 +59,7 @@ void main() {
         country: 'us',
       );
 
-      const differentSource = NewsSource(
-        id: 'bbc-news',
-        name: 'BBC News',
-      );
+      const differentSource = NewsSource(id: 'bbc-news', name: 'BBC News');
 
       expect(expectedSource, equals(sameSource));
       expect(expectedSource.hashCode, equals(sameSource.hashCode));

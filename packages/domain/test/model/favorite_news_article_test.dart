@@ -33,10 +33,7 @@ void main() {
 
       expect(favoriteNewsArticle.article.title, 'Test Title');
       expect(favoriteNewsArticle.article.url, 'https://example.com');
-      expect(
-        favoriteNewsArticle.insertionTime,
-        DateTime(2023, 5, 1, 12, 0, 0),
-      );
+      expect(favoriteNewsArticle.insertionTime, DateTime(2023, 5, 1, 12, 0, 0));
 
       final map = favoriteNewsArticle.toSqfliteMap();
       expect(

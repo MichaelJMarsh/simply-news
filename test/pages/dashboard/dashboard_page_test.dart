@@ -8,8 +8,8 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import 'package:simply_news/pages/dashboard/dashboard_page.dart';
-import 'package:simply_news/widgets/widgets.dart';
+import 'package:simply_news/presentation/pages/dashboard/dashboard_page.dart';
+import 'package:simply_news/presentation/widgets/widgets.dart';
 
 import 'dashboard_page_test.mocks.dart';
 
@@ -31,9 +31,7 @@ void main() {
           ),
           Provider<NewsArticleService>.value(value: mockNewsArticleService),
         ],
-        child: const MaterialApp(
-          home: DashboardPage(),
-        ),
+        child: const MaterialApp(home: DashboardPage()),
       ),
     );
   }
@@ -43,17 +41,14 @@ void main() {
     mockNewsArticleService = MockNewsArticleService();
 
     when(mockFavoriteRepository.list()).thenAnswer((_) async => []);
-    when(mockFavoriteRepository.changes).thenAnswer(
-      (_) => const Stream.empty(),
-    );
-    when(mockNewsArticleService.fetchSources()).thenAnswer(
-      (_) async => <NewsSource>[],
-    );
+    when(
+      mockFavoriteRepository.changes,
+    ).thenAnswer((_) => const Stream.empty());
+    when(
+      mockNewsArticleService.fetchSources(),
+    ).thenAnswer((_) async => <NewsSource>[]);
 
-    const searchResult = SearchResult(
-      articles: [],
-      totalResults: 0,
-    );
+    const searchResult = SearchResult(articles: [], totalResults: 0);
 
     when(
       mockNewsArticleService.searchArticles(
@@ -70,32 +65,28 @@ void main() {
     reset(mockNewsArticleService);
   });
 
-  testWidgets(
-    'shows loading layout initially',
-    (WidgetTester tester) async {
-      await pumpDashboardPage(tester);
+  testWidgets('shows loading layout initially', (WidgetTester tester) async {
+    await pumpDashboardPage(tester);
 
-      // Verify that the LoadingLayout is displayed initially.
-      expect(find.byType(LoadingLayout), findsOneWidget);
+    // Verify that the LoadingLayout is displayed initially.
+    expect(find.byType(LoadingLayout), findsOneWidget);
 
-      // Allow the loading process to complete.
-      await tester.pumpAndSettle();
+    // Allow the loading process to complete.
+    await tester.pumpAndSettle();
 
-      // Verify that the LoadingLayout is no longer displayed.
-      expect(find.byType(LoadingLayout), findsNothing);
-      expect(find.byKey(const Key('empty_search_state')), findsOneWidget);
-    },
-  );
+    // Verify that the LoadingLayout is no longer displayed.
+    expect(find.byType(LoadingLayout), findsNothing);
+    expect(find.byKey(const Key('empty_search_state')), findsOneWidget);
+  });
 
-  testWidgets(
-    'displays empty state when no articles are found',
-    (WidgetTester tester) async {
-      await pumpDashboardPage(tester);
-      await tester.pumpAndSettle();
+  testWidgets('displays empty state when no articles are found', (
+    WidgetTester tester,
+  ) async {
+    await pumpDashboardPage(tester);
+    await tester.pumpAndSettle();
 
-      // Verify that the empty search state is displayed.
-      expect(find.text('Welcome to Simply News!'), findsOneWidget);
-      expect(find.byKey(const Key('empty_search_state')), findsOneWidget);
-    },
-  );
+    // Verify that the empty search state is displayed.
+    expect(find.text('Welcome to Simply News!'), findsOneWidget);
+    expect(find.byKey(const Key('empty_search_state')), findsOneWidget);
+  });
 }

@@ -43,9 +43,10 @@ class NewsArticle {
       description: json[NewsArticleField.description] as String?,
       url: json[NewsArticleField.url] as String?,
       urlToImage: json[NewsArticleField.urlToImage] as String?,
-      publishedAt: json[NewsArticleField.publishedAt] != null
-          ? DateTime.tryParse(json[NewsArticleField.publishedAt])
-          : null,
+      publishedAt:
+          json[NewsArticleField.publishedAt] != null
+              ? DateTime.tryParse(json[NewsArticleField.publishedAt])
+              : null,
       content: json[NewsArticleField.content] as String?,
     );
   }

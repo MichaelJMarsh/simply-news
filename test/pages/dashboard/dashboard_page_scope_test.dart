@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:simply_news/pages/dashboard/dashboard_page_scope.dart';
+import 'package:simply_news/presentation/pages/dashboard/dashboard_page_scope.dart';
 
 import 'dashboard_page_scope_test.mocks.dart';
 
@@ -37,8 +37,9 @@ void main() {
     mockNewsArticleService = MockNewsArticleService();
 
     when(mockFavoriteRepository.list()).thenAnswer((_) async => []);
-    when(mockFavoriteRepository.changes)
-        .thenAnswer((_) => const Stream.empty());
+    when(
+      mockFavoriteRepository.changes,
+    ).thenAnswer((_) => const Stream.empty());
     when(mockNewsArticleService.fetchSources()).thenAnswer((_) async => []);
     when(
       mockNewsArticleService.searchArticles(
@@ -64,27 +65,28 @@ void main() {
   });
 
   group('DashboardPageScope', () {
-    test('initialize() loads favorites and sources and sets isLoading to false',
-        () async {
-      final favoriteArticles = [
-        FavoriteNewsArticle(
-          article: article1,
-          insertionTime: DateTime.now(),
-        ),
-      ];
-      when(mockFavoriteRepository.list())
-          .thenAnswer((_) async => favoriteArticles);
-      // Stub sources.
-      const sources = [NewsSource(id: 'source1', name: 'Source 1')];
-      when(mockNewsArticleService.fetchSources())
-          .thenAnswer((_) async => sources);
+    test(
+      'initialize() loads favorites and sources and sets isLoading to false',
+      () async {
+        final favoriteArticles = [
+          FavoriteNewsArticle(article: article1, insertionTime: DateTime.now()),
+        ];
+        when(
+          mockFavoriteRepository.list(),
+        ).thenAnswer((_) async => favoriteArticles);
+        // Stub sources.
+        const sources = [NewsSource(id: 'source1', name: 'Source 1')];
+        when(
+          mockNewsArticleService.fetchSources(),
+        ).thenAnswer((_) async => sources);
 
-      await scope.initialize();
+        await scope.initialize();
 
-      expect(scope.isLoading, isFalse);
-      expect(scope.sources, equals(sources));
-      expect(scope.isFavorite(article1.url), isTrue);
-    });
+        expect(scope.isLoading, isFalse);
+        expect(scope.sources, equals(sources));
+        expect(scope.isFavorite(article1.url), isTrue);
+      },
+    );
 
     group('selectSource()', () {
       test('clears articles and refreshes with new source', () async {
@@ -106,34 +108,37 @@ void main() {
 
     group('searchNewsArticles()', () {
       test(
-          'if query is empty and no source selected, clears articles without loading',
-          () async {
-        await scope.searchNewsArticles('');
+        'if query is empty and no source selected, clears articles without loading',
+        () async {
+          await scope.searchNewsArticles('');
 
-        await Future.delayed(const Duration(milliseconds: 600));
+          await Future.delayed(const Duration(milliseconds: 600));
 
-        // Verify that no articles were loaded, after 500ms debounce.
-        expect(scope.newsArticles, isEmpty);
-      });
+          // Verify that no articles were loaded, after 500ms debounce.
+          expect(scope.newsArticles, isEmpty);
+        },
+      );
 
-      test('with non-empty query, loads search result after debounce',
-          () async {
-        when(
-          mockNewsArticleService.searchArticles(
-            query: 'flutter',
-            page: anyNamed('page'),
-            pageSize: anyNamed('pageSize'),
-            sourceId: anyNamed('sourceId'),
-          ),
-        ).thenAnswer((_) async => searchResultPage1);
+      test(
+        'with non-empty query, loads search result after debounce',
+        () async {
+          when(
+            mockNewsArticleService.searchArticles(
+              query: 'flutter',
+              page: anyNamed('page'),
+              pageSize: anyNamed('pageSize'),
+              sourceId: anyNamed('sourceId'),
+            ),
+          ).thenAnswer((_) async => searchResultPage1);
 
-        await scope.searchNewsArticles('flutter');
+          await scope.searchNewsArticles('flutter');
 
-        await Future.delayed(const Duration(milliseconds: 600));
+          await Future.delayed(const Duration(milliseconds: 600));
 
-        // Verify that articles are loaded, after 500ms debounce.
-        expect(scope.newsArticles, equals(searchResultPage1.articles));
-      });
+          // Verify that articles are loaded, after 500ms debounce.
+          expect(scope.newsArticles, equals(searchResultPage1.articles));
+        },
+      );
     });
 
     test('resets pagination and loads articles', () async {
@@ -182,8 +187,9 @@ void main() {
         await scope.initialize();
         expect(scope.isFavorite(article1.url), isTrue);
 
-        when(mockFavoriteRepository.delete(article1))
-            .thenAnswer((_) async => Future.value());
+        when(
+          mockFavoriteRepository.delete(article1),
+        ).thenAnswer((_) async => Future.value());
 
         await scope.toggleFavorite(article1);
         verify(mockFavoriteRepository.delete(article1)).called(1);
@@ -194,8 +200,9 @@ void main() {
         await scope.initialize();
         expect(scope.isFavorite(article1.url), isFalse);
 
-        when(mockFavoriteRepository.insert(any))
-            .thenAnswer((_) async => Future.value());
+        when(
+          mockFavoriteRepository.insert(any),
+        ).thenAnswer((_) async => Future.value());
 
         await scope.toggleFavorite(article1);
         verify(mockFavoriteRepository.insert(any)).called(1);
