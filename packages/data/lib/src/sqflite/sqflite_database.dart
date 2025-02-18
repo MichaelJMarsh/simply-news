@@ -5,7 +5,7 @@ import 'sqflite_favorite_news_article_repository.dart';
 
 /// The sqflite implementation of [Database].
 class SqfliteDatabase implements Database {
-  /// Creates a new [SqfliteDatabase] instance.
+  /// Creates a new [SqfliteDatabase].
   SqfliteDatabase({required String path}) : _path = path;
 
   /// The path to the database file.
@@ -26,17 +26,17 @@ class SqfliteDatabase implements Database {
     );
   }
 
+  @override
+  Future<void> close() async {
+    await instance.close();
+  }
+
   /// Creates the database schema and inserts initial data.
   Future<void> _onCreate(sql.Database database, int version) async {
     return database.transaction((transaction) async {
       // Create database tables.
       await transaction.createFavoriteNewsArticleTable();
     });
-  }
-
-  @override
-  Future<void> close() async {
-    await instance.close();
   }
 }
 

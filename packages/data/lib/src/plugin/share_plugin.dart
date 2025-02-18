@@ -3,25 +3,13 @@ import 'dart:ui';
 import 'package:domain/domain.dart';
 import 'package:share_plus/share_plus.dart' as package;
 
+/// An implementation of [Share] that uses the `share_plus` package.
 class SharePlugin implements Share {
   /// Creates a new [SharePlugin].
-  const SharePlugin({
-    required ShareDelegate delegate,
-  }) : _delegate = delegate;
+  const SharePlugin({required ShareDelegate delegate}) : _delegate = delegate;
 
   final ShareDelegate _delegate;
 
-  /// Summons the platform's share sheet to send text.
-  ///
-  /// Wraps the platform's native share dialog. Can send a text and/or a URL.
-  /// It uses the `ACTION_SEND` Intent on Android and `UIActivityViewController`
-  /// on iOS.
-  ///
-  /// The optional [subject] parameter can be used to populate a subject if the
-  /// user chooses to send an email.
-  ///
-  /// The optional [message] parameter can be used to populate text in the body of the
-  /// shared [content]. This is displayed one line above the [content].
   @override
   Future<bool> send({
     final String? subject,
@@ -49,9 +37,9 @@ class SharePlugin implements Share {
   }
 }
 
-/// A delegate for the platform's share sheet.
+/// A delegate that wraps `share_plus` for ease of testing.
 class ShareDelegate {
-  /// Summons the platform's share sheet to send text.
+  /// Shares content using the platform's share sheet.
   Future<package.ShareResult> share(
     String text, {
     String? subject,

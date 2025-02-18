@@ -25,8 +25,9 @@ void main() {
       final result = await plugin.launch('https://example.com');
 
       expect(result, isTrue);
-      verify(mockUrlLauncherDelegate.launch(Uri.parse('https://example.com')))
-          .called(1);
+      verify(
+        mockUrlLauncherDelegate.launch(Uri.parse('https://example.com')),
+      ).called(1);
     });
 
     test('launch returns false when launchUrl fails', () async {
@@ -41,8 +42,9 @@ void main() {
     });
 
     test('canLaunch returns true when canLaunchUrl succeeds', () async {
-      when(mockUrlLauncherDelegate.canLaunch(any))
-          .thenAnswer((_) async => true);
+      when(
+        mockUrlLauncherDelegate.canLaunch(any),
+      ).thenAnswer((_) async => true);
 
       final result = await plugin.canLaunch('https://example.com');
 
@@ -53,8 +55,9 @@ void main() {
     });
 
     test('canLaunch returns false when canLaunchUrl fails', () async {
-      when(mockUrlLauncherDelegate.canLaunch(any))
-          .thenAnswer((_) async => false);
+      when(
+        mockUrlLauncherDelegate.canLaunch(any),
+      ).thenAnswer((_) async => false);
 
       final result = await plugin.canLaunch('https://example.com');
 

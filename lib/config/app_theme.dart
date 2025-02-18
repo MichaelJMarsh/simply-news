@@ -27,9 +27,7 @@ class AppTheme {
   );
 
   /// Determines the correct theme based on user settings and system brightness.
-  static ThemeData getTheme({
-    required Brightness platformBrightness,
-  }) {
+  static ThemeData getTheme({required Brightness platformBrightness}) {
     return platformBrightness == Brightness.light ? lightTheme : darkTheme;
   }
 }

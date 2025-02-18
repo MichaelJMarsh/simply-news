@@ -13,8 +13,8 @@ class DashboardPageScope extends ChangeNotifier {
   DashboardPageScope({
     required FavoriteNewsArticleRepository favoriteNewsArticleRepository,
     required NewsArticleService newsArticleService,
-  })  : _favoriteNewsArticleRepository = favoriteNewsArticleRepository,
-        _newsArticleService = newsArticleService;
+  }) : _favoriteNewsArticleRepository = favoriteNewsArticleRepository,
+       _newsArticleService = newsArticleService;
 
   /// Creates a new [DashboardPageScope] from the [context].
   factory DashboardPageScope.of(final BuildContext context) {
@@ -30,7 +30,7 @@ class DashboardPageScope extends ChangeNotifier {
 
   /// The subscription which listens to changes in favorite news articles.
   StreamSubscription<List<FavoriteNewsArticle>>?
-      _favoriteNewsArticleStreamSubscription;
+  _favoriteNewsArticleStreamSubscription;
 
   /// The list of news articles.
   List<NewsArticle> get newsArticles => _newsArticles;
@@ -95,15 +95,17 @@ class DashboardPageScope extends ChangeNotifier {
 
   /// Subscribes to favorite article changes
   void _initializeFavoriteNewsArticleStreamSubscription() {
-    _favoriteNewsArticleStreamSubscription =
-        _favoriteNewsArticleRepository.changes.listen((favoriteNewsArticles) {
-      _favoriteNewsArticleUrls = favoriteNewsArticles
-          .map((favoriteNewsArticle) => favoriteNewsArticle.article.url)
-          .whereType<String>()
-          .toList();
+    _favoriteNewsArticleStreamSubscription = _favoriteNewsArticleRepository
+        .changes
+        .listen((favoriteNewsArticles) {
+          _favoriteNewsArticleUrls =
+              favoriteNewsArticles
+                  .map((favoriteNewsArticle) => favoriteNewsArticle.article.url)
+                  .whereType<String>()
+                  .toList();
 
-      notifyListeners();
-    });
+          notifyListeners();
+        });
   }
 
   /// Returns whether the given [articleUrl] is marked as favorite.
@@ -127,10 +129,7 @@ class DashboardPageScope extends ChangeNotifier {
     }
     final now = clock.now();
     return _favoriteNewsArticleRepository.insert(
-      FavoriteNewsArticle(
-        article: article,
-        insertionTime: now,
-      ),
+      FavoriteNewsArticle(article: article, insertionTime: now),
     );
   }
 

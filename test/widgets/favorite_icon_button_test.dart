@@ -2,73 +2,64 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:simply_news/widgets/src/favorite_icon_button.dart';
+import 'package:simply_news/presentation/widgets/src/favorite_icon_button.dart';
 
 void main() {
   group('FavoriteIconButton', () {
-    testWidgets(
-      'renders favorite icon when isFavorite is true',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: FavoriteIconButton(
-                isFavorite: true,
-                onPressed: () {},
-              ),
+    testWidgets('renders favorite icon when isFavorite is true', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FavoriteIconButton(isFavorite: true, onPressed: () {}),
+          ),
+        ),
+      );
+
+      // Verify that the correct icon is rendered.
+      expect(find.byIcon(Icons.favorite), findsOneWidget);
+      expect(find.byIcon(Icons.favorite_border), findsNothing);
+    });
+
+    testWidgets('renders not favorite icon when isFavorite is false', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FavoriteIconButton(isFavorite: false, onPressed: () {}),
+          ),
+        ),
+      );
+
+      // Verify that the correct icon is rendered.
+      expect(find.byIcon(Icons.favorite_border), findsOneWidget);
+      expect(find.byIcon(Icons.favorite), findsNothing);
+    });
+
+    testWidgets('calls onPressed callback when tapped', (
+      WidgetTester tester,
+    ) async {
+      var pressed = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FavoriteIconButton(
+              isFavorite: false,
+              onPressed: () => pressed = true,
             ),
           ),
-        );
+        ),
+      );
 
-        // Verify that the correct icon is rendered.
-        expect(find.byIcon(Icons.favorite), findsOneWidget);
-        expect(find.byIcon(Icons.favorite_border), findsNothing);
-      },
-    );
+      await tester.tap(find.byType(IconButton));
+      await tester.pumpAndSettle();
 
-    testWidgets(
-      'renders not favorite icon when isFavorite is false',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: FavoriteIconButton(
-                isFavorite: false,
-                onPressed: () {},
-              ),
-            ),
-          ),
-        );
-
-        // Verify that the correct icon is rendered.
-        expect(find.byIcon(Icons.favorite_border), findsOneWidget);
-        expect(find.byIcon(Icons.favorite), findsNothing);
-      },
-    );
-
-    testWidgets(
-      'calls onPressed callback when tapped',
-      (WidgetTester tester) async {
-        var pressed = false;
-
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: FavoriteIconButton(
-                isFavorite: false,
-                onPressed: () => pressed = true,
-              ),
-            ),
-          ),
-        );
-
-        await tester.tap(find.byType(IconButton));
-        await tester.pumpAndSettle();
-
-        // Verify that the onPressed callback was called.
-        expect(pressed, isTrue);
-      },
-    );
+      // Verify that the onPressed callback was called.
+      expect(pressed, isTrue);
+    });
 
     testWidgets(
       'uses AnimatedSwitcher for transition and switches keys properly',

@@ -5,10 +5,7 @@ import 'loading_indicator.dart';
 /// A vertically centered layout displaying a loading message and indicator.
 class LoadingLayout extends StatelessWidget {
   /// Creates a new [LoadingLayout].
-  const LoadingLayout({
-    super.key,
-    required this.message,
-  });
+  const LoadingLayout({super.key, required this.message});
 
   /// The message to display while loading.
   ///

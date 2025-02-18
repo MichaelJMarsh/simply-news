@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
 import 'package:provider/provider.dart';
 
-import 'package:simply_news/pages/article_overview/article_overview_page.dart';
-import 'package:simply_news/pages/favorites/favorite_articles_page.dart';
-import 'package:simply_news/widgets/widgets.dart';
+import 'package:simply_news/presentation/pages/article_overview/article_overview_page.dart';
+import 'package:simply_news/presentation/pages/favorites/favorite_articles_page.dart';
+import 'package:simply_news/presentation/widgets/widgets.dart';
 
 import 'dashboard_page_scope.dart';
 
@@ -95,7 +95,8 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
   /// Attempts to load more articles, if the user scrolls close to the bottom.
   Future<void> _onScroll() async {
     const pixelThreshold = 200.0;
-    final hasReachBottom = _scrollController.position.pixels >=
+    final hasReachBottom =
+        _scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - pixelThreshold;
 
     final dashboardScope = context.read<DashboardPageScope>();
@@ -112,9 +113,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
   }) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => ArticleOverviewPage(article: article),
-      ),
+      MaterialPageRoute(builder: (_) => ArticleOverviewPage(article: article)),
     );
   }
 
@@ -122,9 +121,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
   Future<void> _openFavoritesArticles(BuildContext context) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => const FavoriteArticlesPage(),
-      ),
+      MaterialPageRoute(builder: (_) => const FavoriteArticlesPage()),
     );
   }
 
@@ -169,10 +166,9 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                     article: newsArticle,
                     isFavorite: dashboard.isFavorite(newsArticle.url),
                     onFavorite: () => dashboard.toggleFavorite(newsArticle),
-                    onPressed: () => _openArticleOverview(
-                      context,
-                      article: newsArticle,
-                    ),
+                    onPressed:
+                        () =>
+                            _openArticleOverview(context, article: newsArticle),
                   ),
                 );
               },
@@ -183,9 +179,7 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
               key: Key('loading_more_articles_indicator'),
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
-                child: Center(
-                  child: LoadingIndicator(),
-                ),
+                child: Center(child: LoadingIndicator()),
               ),
             )
           else if (hasReachedLastArticle)
@@ -243,17 +237,13 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
     final isLoading = dashboard.isLoading;
     if (isLoading) {
       body = AnimatedTranslation.vertical(
-        key: Key(
-          'loading_indicator.${isLoading ? 'visible' : 'hidden'}',
-        ),
+        key: Key('loading_indicator.${isLoading ? 'visible' : 'hidden'}'),
         animation: _enterAnimations.body,
         pixels: 32,
         child: Padding(
           padding: EdgeInsets.only(bottom: headerHeight),
           child: const Center(
-            child: LoadingLayout(
-              message: Text('Loading news articles...'),
-            ),
+            child: LoadingLayout(message: Text('Loading news articles...')),
           ),
         ),
       );
@@ -299,13 +289,11 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
           ),
           child: AppBar(
             clipBehavior: Clip.none,
-            backgroundColor: WidgetStateColor.resolveWith(
-              (states) {
-                return states.contains(WidgetState.scrolledUnder)
-                    ? colorScheme.primary.withValues(alpha: 0.24)
-                    : Colors.transparent;
-              },
-            ),
+            backgroundColor: WidgetStateColor.resolveWith((states) {
+              return states.contains(WidgetState.scrolledUnder)
+                  ? colorScheme.primary.withValues(alpha: 0.24)
+                  : Colors.transparent;
+            }),
             flexibleSpace: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -319,9 +307,10 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                         animation: _enterAnimations.appBarTitle,
                         pixels: 32,
                         child: DropdownButton(
-                          value: dashboard.selectedSourceId?.isEmpty == true
-                              ? null
-                              : dashboard.selectedSourceId,
+                          value:
+                              dashboard.selectedSourceId?.isEmpty == true
+                                  ? null
+                                  : dashboard.selectedSourceId,
                           hint: const Text('Select Source'),
                           underline: const SizedBox(),
                           items: [
@@ -338,8 +327,8 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
                               ),
                             ),
                           ],
-                          onChanged: (sourceId) =>
-                              dashboard.selectSource(sourceId),
+                          onChanged:
+                              (sourceId) => dashboard.selectSource(sourceId),
                         ),
                       ),
                       AnimatedTranslation.horizontal(
@@ -392,22 +381,22 @@ class _LayoutState extends State<_Layout> with SingleTickerProviderStateMixin {
 /// The entrance animations for each item on the [DashboardPage].
 class _EnterAnimations {
   _EnterAnimations(this.controller)
-      : appBarButton = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0, 0.500, curve: Curves.fastOutSlowIn),
-        ),
-        appBarTitle = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.050, 0.550, curve: Curves.fastOutSlowIn),
-        ),
-        searchBar = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.200, 0.700, curve: Curves.fastOutSlowIn),
-        ),
-        body = CurvedAnimation(
-          parent: controller,
-          curve: const Interval(0.300, 0.800, curve: Curves.fastOutSlowIn),
-        );
+    : appBarButton = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0, 0.500, curve: Curves.fastOutSlowIn),
+      ),
+      appBarTitle = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.050, 0.550, curve: Curves.fastOutSlowIn),
+      ),
+      searchBar = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.200, 0.700, curve: Curves.fastOutSlowIn),
+      ),
+      body = CurvedAnimation(
+        parent: controller,
+        curve: const Interval(0.300, 0.800, curve: Curves.fastOutSlowIn),
+      );
 
   final AnimationController controller;
 

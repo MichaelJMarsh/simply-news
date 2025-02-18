@@ -3,13 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:simply_news/pages/article_overview/article_overview_page_scope.dart';
+import 'package:simply_news/presentation/pages/article_overview/article_overview_page_scope.dart';
 
 import 'article_overview_page_scope_test.mocks.dart';
 
-@GenerateNiceMocks([
-  MockSpec<FavoriteNewsArticleRepository>(),
-])
+@GenerateNiceMocks([MockSpec<FavoriteNewsArticleRepository>()])
 void main() {
   late MockFavoriteNewsArticleRepository mockFavoriteNewsArticleRepository;
   late ArticleOverviewPageScope scope;
@@ -17,7 +15,8 @@ void main() {
   const testArticle = NewsArticle(
     title: 'Mock Title',
     author: 'Mock Author',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
+    content:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
         'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. '
         'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris '
         'nisi ut aliquip ex ea commodo consequat.',
@@ -27,8 +26,9 @@ void main() {
   setUp(() {
     mockFavoriteNewsArticleRepository = MockFavoriteNewsArticleRepository();
 
-    when(mockFavoriteNewsArticleRepository.get(any))
-        .thenAnswer((_) async => null);
+    when(
+      mockFavoriteNewsArticleRepository.get(any),
+    ).thenAnswer((_) async => null);
 
     scope = ArticleOverviewPageScope(
       article: testArticle,
@@ -87,8 +87,9 @@ void main() {
         didNotify = true;
       });
 
-      when(mockFavoriteNewsArticleRepository.get(testArticle.url!))
-          .thenAnswer((_) async => null);
+      when(
+        mockFavoriteNewsArticleRepository.get(testArticle.url!),
+      ).thenAnswer((_) async => null);
 
       await scope.initialize();
 
@@ -102,44 +103,52 @@ void main() {
 
     group('isFavorite()', () {
       test('returns false if repository returns null', () async {
-        when(mockFavoriteNewsArticleRepository.get(testArticle.url!))
-            .thenAnswer((_) async => null);
+        when(
+          mockFavoriteNewsArticleRepository.get(testArticle.url!),
+        ).thenAnswer((_) async => null);
 
         await scope.initialize();
 
         expect(scope.isFavorite(), isFalse);
-        verify(mockFavoriteNewsArticleRepository.get(testArticle.url!))
-            .called(1);
+        verify(
+          mockFavoriteNewsArticleRepository.get(testArticle.url!),
+        ).called(1);
       });
 
-      test('returns true if repository returns a FavoriteNewsArticle',
-          () async {
-        final favorite = FavoriteNewsArticle(
-          article: testArticle,
-          insertionTime: DateTime.now(),
-        );
+      test(
+        'returns true if repository returns a FavoriteNewsArticle',
+        () async {
+          final favorite = FavoriteNewsArticle(
+            article: testArticle,
+            insertionTime: DateTime.now(),
+          );
 
-        when(mockFavoriteNewsArticleRepository.get(testArticle.url!))
-            .thenAnswer((_) async => favorite);
+          when(
+            mockFavoriteNewsArticleRepository.get(testArticle.url!),
+          ).thenAnswer((_) async => favorite);
 
-        await scope.initialize();
+          await scope.initialize();
 
-        expect(scope.isFavorite(), isTrue);
-        verify(mockFavoriteNewsArticleRepository.get(testArticle.url!))
-            .called(1);
-      });
+          expect(scope.isFavorite(), isTrue);
+          verify(
+            mockFavoriteNewsArticleRepository.get(testArticle.url!),
+          ).called(1);
+        },
+      );
     });
 
     group('toggleFavorite()', () {
       test('inserts article if not currently favorite', () async {
-        when(mockFavoriteNewsArticleRepository.get(testArticle.url!))
-            .thenAnswer((_) async => null);
+        when(
+          mockFavoriteNewsArticleRepository.get(testArticle.url!),
+        ).thenAnswer((_) async => null);
 
         await scope.initialize();
         expect(scope.isFavorite(), isFalse);
 
-        when(mockFavoriteNewsArticleRepository.insert(any))
-            .thenAnswer((_) async => Future.value());
+        when(
+          mockFavoriteNewsArticleRepository.insert(any),
+        ).thenAnswer((_) async => Future.value());
 
         await scope.toggleFavorite();
         verify(mockFavoriteNewsArticleRepository.insert(any)).called(1);
@@ -154,14 +163,16 @@ void main() {
           insertionTime: DateTime.now(),
         );
 
-        when(mockFavoriteNewsArticleRepository.get(testArticle.url!))
-            .thenAnswer((_) async => favorite);
+        when(
+          mockFavoriteNewsArticleRepository.get(testArticle.url!),
+        ).thenAnswer((_) async => favorite);
 
         await scope.initialize();
         expect(scope.isFavorite(), isTrue);
 
-        when(mockFavoriteNewsArticleRepository.delete(testArticle))
-            .thenAnswer((_) async => Future.value());
+        when(
+          mockFavoriteNewsArticleRepository.delete(testArticle),
+        ).thenAnswer((_) async => Future.value());
 
         await scope.toggleFavorite();
         verify(mockFavoriteNewsArticleRepository.delete(testArticle)).called(1);

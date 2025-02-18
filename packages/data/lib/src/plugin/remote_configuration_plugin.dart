@@ -3,9 +3,8 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class RemoteConfigurationPlugin implements RemoteConfigurationService {
   /// Creates a new [RemoteConfigurationPlugin].
-  const RemoteConfigurationPlugin({
-    required FirebaseRemoteConfig remoteConfig,
-  }) : _remoteConfig = remoteConfig;
+  const RemoteConfigurationPlugin({required FirebaseRemoteConfig remoteConfig})
+    : _remoteConfig = remoteConfig;
 
   final FirebaseRemoteConfig _remoteConfig;
 

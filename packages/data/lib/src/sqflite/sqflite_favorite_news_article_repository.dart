@@ -16,28 +16,24 @@ class SqfliteFavoriteNewsArticleRepository
   /// The name of the [SqfliteFavoriteNewsArticleRepository] table.
   static const tableName = 'favorite_news_articles';
 
-  final StreamController<List<FavoriteNewsArticle>> _eventController =
-      StreamController.broadcast();
+  var _favoriteNewsArticles = <FavoriteNewsArticle>[];
 
   @override
   Stream<List<FavoriteNewsArticle>> get changes => _eventController.stream;
-  List<FavoriteNewsArticle> _favoriteNewsArticles = [];
+  final StreamController<List<FavoriteNewsArticle>> _eventController =
+      StreamController.broadcast();
 
   @override
   Future<void> insert(FavoriteNewsArticle? favoriteNewsArticle) async {
     if (favoriteNewsArticle == null) return;
 
-    await _database.insert(
-      tableName,
-      {
-        FavoriteNewsArticleField.article: jsonEncode(
-          favoriteNewsArticle.article.toJson(),
-        ),
-        FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch:
-            favoriteNewsArticle.insertionTime.millisecondsSinceEpoch,
-      },
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await _database.insert(tableName, {
+      FavoriteNewsArticleField.article: jsonEncode(
+        favoriteNewsArticle.article.toJson(),
+      ),
+      FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch:
+          favoriteNewsArticle.insertionTime.millisecondsSinceEpoch,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
 
     _favoriteNewsArticles.add(favoriteNewsArticle);
     _eventController.add(List.from(_favoriteNewsArticles));
@@ -53,11 +49,9 @@ class SqfliteFavoriteNewsArticleRepository
       whereArgs: ['%"${newsArticle.url}"%'],
     );
 
-    _favoriteNewsArticles.removeWhere(
-      (favoriteNewsArticle) {
-        return favoriteNewsArticle.article.url == newsArticle.url;
-      },
-    );
+    _favoriteNewsArticles.removeWhere((favoriteNewsArticle) {
+      return favoriteNewsArticle.article.url == newsArticle.url;
+    });
     _eventController.add(List.from(_favoriteNewsArticles));
   }
 
@@ -86,19 +80,21 @@ class SqfliteFavoriteNewsArticleRepository
       orderBy: '$insertionDateField DESC',
     );
 
-    final favoriteNewsArticles = results.map((map) {
-      final jsonArticle =
-          jsonDecode(map[FavoriteNewsArticleField.article] as String)
-              as Map<String, dynamic>;
+    final favoriteNewsArticles =
+        results.map((map) {
+          final jsonArticle =
+              jsonDecode(map[FavoriteNewsArticleField.article] as String)
+                  as Map<String, dynamic>;
 
-      return FavoriteNewsArticle(
-        article: NewsArticle.fromJson(jsonArticle),
-        insertionTime: DateTime.fromMillisecondsSinceEpoch(
-          map[FavoriteNewsArticleField.insertionDateInMillisecondsSinceEpoch]
-              as int,
-        ),
-      );
-    }).toList();
+          return FavoriteNewsArticle(
+            article: NewsArticle.fromJson(jsonArticle),
+            insertionTime: DateTime.fromMillisecondsSinceEpoch(
+              map[FavoriteNewsArticleField
+                      .insertionDateInMillisecondsSinceEpoch]
+                  as int,
+            ),
+          );
+        }).toList();
 
     _favoriteNewsArticles = favoriteNewsArticles;
     return favoriteNewsArticles;

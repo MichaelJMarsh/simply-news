@@ -29,16 +29,11 @@ class FavoriteIconButton extends StatelessWidget {
         transitionBuilder: (child, animation) {
           return ScaleTransition(
             scale: animation,
-            child: FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
+            child: FadeTransition(opacity: animation, child: child),
           );
         },
         child: Icon(
-          key: Key(
-            'favorite_icon.${isFavorite ? 'favorite' : 'not_favorite'}',
-          ),
+          key: Key('favorite_icon.${isFavorite ? 'favorite' : 'not_favorite'}'),
           isFavorite ? Icons.favorite : Icons.favorite_border,
           color: isFavorite ? Colors.red : colorScheme.onSurface,
         ),
