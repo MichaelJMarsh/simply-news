@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:data/data.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
@@ -20,6 +21,9 @@ class Bootstrap {
   /// created [SimplyNewsApp].
   static Future<SimplyNewsApp> initializeApp() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    // Load environment variables before Firebase initializes.
+    await dotenv.load();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
