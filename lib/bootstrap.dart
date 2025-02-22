@@ -23,7 +23,9 @@ class Bootstrap {
     WidgetsFlutterBinding.ensureInitialized();
 
     // Load environment variables before Firebase initializes.
+    print("Loading .env file...");
     await dotenv.load();
+    print("ENV Loaded!");
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
