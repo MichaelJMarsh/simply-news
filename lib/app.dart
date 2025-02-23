@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -55,15 +56,15 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
       ],
       builder: (context, __) {
         final mediaQuery = MediaQuery.of(context);
-        final theme = AppTheme.getTheme(
-          platformBrightness: mediaQuery.platformBrightness,
-        );
+        final platformBrightness = mediaQuery.platformBrightness;
+
+        final theme = AppTheme.getTheme(platformBrightness: platformBrightness);
 
         return MediaQuery(
           data: mediaQuery.copyWith(textScaler: TextScaler.noScaling),
           child: AnnotatedRegion<SystemUiOverlayStyle>(
             value:
-                theme.colorScheme.brightness == Brightness.dark
+                platformBrightness == Brightness.dark
                     ? SystemUiOverlayStyle.light
                     : SystemUiOverlayStyle.dark,
             child: DefaultTextStyle(
@@ -73,6 +74,7 @@ class _SimplyNewsAppState extends State<SimplyNewsApp>
                 color: theme.colorScheme.onSurface,
               ),
               child: MaterialApp(
+                debugShowCheckedModeBanner: kDebugMode,
                 title: 'Simply News',
                 theme: theme,
                 home: const DashboardPage(),

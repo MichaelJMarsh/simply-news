@@ -4,6 +4,10 @@ A **Flutter** app that delivers **text-focused news** from [NewsAPI.org](https:/
 
 ---
 
+<img src="images/simply_news_mockups.png" alt="Simply News Mockups" width="100%">
+
+---
+
 ## 📌 Features
 
 - **Minimalist News Reader** – Enjoy a distraction-free, text-first browsing experience.
