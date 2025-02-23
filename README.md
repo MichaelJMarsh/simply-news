@@ -1,6 +1,6 @@
 # Simply News
 
-A **Flutter** app that delivers **text-focused news** from [NewsAPI.org](https://newsapi.org) in a clean, minimalist interface. Developed for a Headspace Mobile Engineering assignment, this project follows clean architecture principles and demonstrates best practices in Flutter development, state management, and testing.
+A **cross-platform Flutter app (Android & iOS)** that delivers **text-focused news** from [NewsAPI.org](https://newsapi.org) in a clean, minimalist interface. Developed for a Headspace Mobile Engineering assignment, this project follows clean architecture principles and demonstrates best practices in Flutter development, state management, and testing.
 
 ---
 
